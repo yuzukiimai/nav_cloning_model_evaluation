@@ -149,7 +149,7 @@ class nav_cloning_node:
         img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
         h_deg = 0 #色相(Hue)の回転度数
         s_mag = 1 # 彩度(Saturation)の倍率
-        v_mag = 2 # 明度(Value)の倍率
+        v_mag = 1 # 明度(Value)の倍率
  
         img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
         img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
@@ -167,7 +167,7 @@ class nav_cloning_node:
         img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
         h_deg_left = 0 #色相(Hue)の回転度数
         s_mag_left = 1 # 彩度(Saturation)の倍率
-        v_mag_left = 2 # 明度(Value)の倍率
+        v_mag_left = 1 # 明度(Value)の倍率
  
         img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
         img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
@@ -185,7 +185,7 @@ class nav_cloning_node:
         img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
         h_deg_right = 0 #色相(Hue)の回転度数
         s_mag_right = 1 # 彩度(Saturation)の倍率
-        v_mag_right = 2 # 明度(Value)の倍率
+        v_mag_right = 1 # 明度(Value)の倍率
  
         img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
         img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
@@ -360,11 +360,11 @@ class nav_cloning_node:
             self.nav_pub.publish(self.vel)
 
         temp = copy.deepcopy(bgr)
-        cv2.imshow("Resized Image", temp)
+        cv2.imshow("HSV Center Image", temp)
         temp = copy.deepcopy(bgr_left)
-        cv2.imshow("Resized Left Image", temp)
+        cv2.imshow("HSV Left Image", temp)
         temp = copy.deepcopy(bgr_right)
-        cv2.imshow("Resized Right Image", temp)
+        cv2.imshow("HSV Right Image", temp)
         cv2.waitKey(1)
 
 if __name__ == '__main__':

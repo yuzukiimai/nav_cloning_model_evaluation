@@ -202,10 +202,10 @@ class nav_cloning_node:
 
         ros_time = str(rospy.Time.now())
 
-        if self.episode == 4000:
+        if self.episode == 0:
             self.learning = False
-            self.dl.save(self.save_path)
-            #self.dl.load(self.load_path)
+            # self.dl.save(self.save_path)
+            self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_use_dl_output/20230101_21:56:45/model_gpu.pt")
 
         if self.episode == 6000:
             os.system('killall roslaunch')

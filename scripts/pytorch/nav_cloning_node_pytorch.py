@@ -70,33 +70,7 @@ class nav_cloning_node:
         #     writer.writerow(['step', 'mode', 'loss', 'angle_error(rad)', 'distance(m)','x(m)','y(m)', 'the(rad)', 'direction'])
         self.tracker_sub = rospy.Subscriber("/tracker", Odometry, self.callback_tracker)
 
-    # def callback(self, data):
-        # try:
-            # self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-            # img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-        
-            # h_deg = 0 #色相(Hue)の回転度数
-            # s_mag = 1 # 彩度(Saturation)の倍率
-            # v_mag = 2 # 明度(Value)の倍率
- 
-            # img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
-            # img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
-            # img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
-            # bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            # print(bgr)
-            # return bgr
-        # except CvBridgeError as e:
-            # print(e)
-
-    # def callback_left_camera(self, data):
-        # self.cv_left_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        # hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-
-    # def callback_right_camera(self, data):
-        # self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        # hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-
-#----------------------------------------------------------------------------------------------
+   
     def callback(self, data):
         try:
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -114,7 +88,9 @@ class nav_cloning_node:
             self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
-#------------------------------------------------------------------------------------------------
+
+
+
     def callback_tracker(self, data):
         self.pos_x = data.pose.pose.position.x
         self.pos_y = data.pose.pose.position.y
@@ -166,8 +142,10 @@ class nav_cloning_node:
             self.is_started = True
         if self.is_started == False:
             return
-        img = resize(self.cv_image, (48, 64), mode='constant')
-        
+
+        # img = resize(self.cv_image, (48, 64), mode='constant')
+
+#---------------------------------------------------------------------------------------        
         img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
         h_deg = 0 #色相(Hue)の回転度数
         s_mag = 1 # 彩度(Saturation)の倍率
@@ -176,18 +154,52 @@ class nav_cloning_node:
         img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
         img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
         img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
+
         bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-        print(bgr)
+        img = resize(bgr, (48, 64), mode='constant')
+        # print(bgr)
+#-----------------------------------------------------------------------------------------
+
         # r, g, b = cv2.split(img)
         # img = np.asanyarray([r,g,b])
 
-        img_left = resize(self.cv_left_image, (48, 64), mode='constant')
+#-----------------------------------------------------------------------------------------
+        img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
+        h_deg_left = 0 #色相(Hue)の回転度数
+        s_mag_left = 1 # 彩度(Saturation)の倍率
+        v_mag_left = 2 # 明度(Value)の倍率
+ 
+        img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
+        img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
+        img_hsv_left[:,:,(2)] = img_hsv_left[:,:,(2)]*v_mag_left # 明度の計算
+        
+        bgr_left = cv2.cvtColor(img_hsv_left,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+        img_left = resize(bgr_left, (48, 64), mode='constant')
+        #print(bgr_left)
+#------------------------------------------------------------------------------------------     
+
         #r, g, b = cv2.split(img_left)
         #img_left = np.asanyarray([r,g,b])
 
-        img_right = resize(self.cv_right_image, (48, 64), mode='constant')
+#------------------------------------------------------------------------------------------
+        img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
+        h_deg_right = 0 #色相(Hue)の回転度数
+        s_mag_right = 1 # 彩度(Saturation)の倍率
+        v_mag_right = 2 # 明度(Value)の倍率
+ 
+        img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
+        img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
+        img_hsv_right[:,:,(2)] = img_hsv_right[:,:,(2)]*v_mag_right # 明度の計算
+        
+        bgr_right = cv2.cvtColor(img_hsv_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+        img_right = resize(bgr_right, (48, 64), mode='constant')
+        #print(bgr_right)
+#-------------------------------------------------------------------------------------------
+
         #r, g, b = cv2.split(img_right)
         #img_right = np.asanyarray([r,g,b])
+
+
         ros_time = str(rospy.Time.now())
 
         if self.episode == 4000:
@@ -349,9 +361,9 @@ class nav_cloning_node:
 
         temp = copy.deepcopy(bgr)
         cv2.imshow("Resized Image", temp)
-        temp = copy.deepcopy(img_left)
+        temp = copy.deepcopy(bgr_left)
         cv2.imshow("Resized Left Image", temp)
-        temp = copy.deepcopy(img_right)
+        temp = copy.deepcopy(bgr_right)
         cv2.imshow("Resized Right Image", temp)
         cv2.waitKey(1)
 

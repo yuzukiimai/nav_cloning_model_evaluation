@@ -70,50 +70,50 @@ class nav_cloning_node:
         #     writer.writerow(['step', 'mode', 'loss', 'angle_error(rad)', 'distance(m)','x(m)','y(m)', 'the(rad)', 'direction'])
         self.tracker_sub = rospy.Subscriber("/tracker", Odometry, self.callback_tracker)
 
-    def callback(self, data):
-        try:
-            self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-        
-            h_deg = 0 #色相(Hue)の回転度数
-            s_mag = 1 # 彩度(Saturation)の倍率
-            v_mag = 2 # 明度(Value)の倍率
- 
-            img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
-            img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
-            img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
-            bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            print(bgr)
-            # return bgr
-        except CvBridgeError as e:
-            print(e)
-
-    def callback_left_camera(self, data):
-        self.cv_left_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-
-    def callback_right_camera(self, data):
-        self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-
-#----------------------------------------------------------------------------------------------
     # def callback(self, data):
         # try:
             # self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+            # img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
+        
+            # h_deg = 0 #色相(Hue)の回転度数
+            # s_mag = 1 # 彩度(Saturation)の倍率
+            # v_mag = 2 # 明度(Value)の倍率
+ 
+            # img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
+            # img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
+            # img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
+            # bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+            # print(bgr)
+            # return bgr
         # except CvBridgeError as e:
             # print(e)
 
     # def callback_left_camera(self, data):
-        # try:
-            # self.cv_left_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        # except CvBridgeError as e:
-            # print(e)
+        # self.cv_left_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        # hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
 
     # def callback_right_camera(self, data):
-        # try:
-            # self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        # except CvBridgeError as e:
-            # print(e)
+        # self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        # hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
+
+#----------------------------------------------------------------------------------------------
+    def callback(self, data):
+        try:
+            self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        except CvBridgeError as e:
+            print(e)
+
+    def callback_left_camera(self, data):
+        try:
+            self.cv_left_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        except CvBridgeError as e:
+            print(e)
+
+    def callback_right_camera(self, data):
+        try:
+            self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        except CvBridgeError as e:
+            print(e)
 #------------------------------------------------------------------------------------------------
     def callback_tracker(self, data):
         self.pos_x = data.pose.pose.position.x
@@ -168,6 +168,16 @@ class nav_cloning_node:
             return
         img = resize(self.cv_image, (48, 64), mode='constant')
         
+        img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
+        h_deg = 0 #色相(Hue)の回転度数
+        s_mag = 1 # 彩度(Saturation)の倍率
+        v_mag = 2 # 明度(Value)の倍率
+ 
+        img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
+        img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
+        img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
+        bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+        print(bgr)
         # r, g, b = cv2.split(img)
         # img = np.asanyarray([r,g,b])
 
@@ -337,7 +347,7 @@ class nav_cloning_node:
             self.vel.angular.z = target_action
             self.nav_pub.publish(self.vel)
 
-        temp = copy.deepcopy(img)
+        temp = copy.deepcopy(bgr)
         cv2.imshow("Resized Image", temp)
         temp = copy.deepcopy(img_left)
         cv2.imshow("Resized Left Image", temp)

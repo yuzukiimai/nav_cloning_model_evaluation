@@ -1,4 +1,4 @@
-for i in `seq 10`
+for i in `seq 50`
 do
   roslaunch nav_cloning nav_cloning_pytorch.launch
   sleep 20

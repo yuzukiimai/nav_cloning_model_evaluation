@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import print_function
 import roslib
 roslib.load_manifest('nav_cloning')
@@ -23,7 +23,7 @@ def draw_training_pos():
     count = 0
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_10/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_2000step_1/training.csv', 'r') as f:
-    with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_with_dir_use_dl_output/5000step31/training.csv', 'r') as f:
+    with open('/home/yuzuki/catkin_ws/src/nav_cloning/data/V_0.5/result_use_dl_output/20230102_18:40:51/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/add_10/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_selected_training/20220817_21:20:01/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_rate_change/5000step40/training.csv', 'r') as f:
@@ -38,7 +38,7 @@ def draw_training_pos():
                 # else:
                 if mode == "test":
                     x, y = float(str_x), float(str_y)
-                    patch = Circle(xy=(x, y), radius=0.08, facecolor="gray") 
+                    patch = Circle(xy=(x, y), radius=0.08, facecolor="red") 
                     ax.add_patch(patch)
         else:
                     pass

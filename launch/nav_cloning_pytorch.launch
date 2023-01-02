@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="script" default="nav_cloning_node_pytorch.py"/>
-  <!-- <arg name="script" default="change_dataset_balance.py"/> -->
   <arg name="mode" default="use_dl_output"/>
   <arg name="robot_x" default="2.915899" />
   <arg name="robot_y" default="0.717698" />
@@ -12,7 +11,7 @@
     <arg name="world_name" value="$(find nav_cloning)/world/willow_garage.world"/> 
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
-    <arg name="gui" value="true"/>
+    <arg name="gui" value="false"/>
     <arg name="headless" value="false"/>
     <arg name="debug" value="false"/>
   </include>

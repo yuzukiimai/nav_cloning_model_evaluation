@@ -26,6 +26,7 @@ import copy
 import sys
 import tf
 from nav_msgs.msg import Odometry
+import random
 
 class nav_cloning_node:
     def __init__(self):
@@ -145,59 +146,129 @@ class nav_cloning_node:
 
         # img = resize(self.cv_image, (48, 64), mode='constant')
 
+
+
+
+#---------------------------------------------------------------------------------------
+        if self.episode < 4000:
+            x = random.uniform(0.5, 1.2)
+            # print(x)
 #---------------------------------------------------------------------------------------        
-        img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-        h_deg = 0 #色相(Hue)の回転度数
-        s_mag = 1 # 彩度(Saturation)の倍率
-        v_mag = 0.5 # 明度(Value)の倍率
+            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
+            h_deg = 0 #色相(Hue)の回転度数
+            s_mag = 1 # 彩度(Saturation)の倍率
+            v_mag = x # 明度(Value)の倍率
  
-        img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
-        img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
-        img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
+            img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
+            img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
+            img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
 
-        bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-        img = resize(bgr, (48, 64), mode='constant')
-        # print(bgr)
+            bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+            img = resize(bgr, (48, 64), mode='constant')
+            # print(bgr)
 #-----------------------------------------------------------------------------------------
 
-        # r, g, b = cv2.split(img)
-        # img = np.asanyarray([r,g,b])
+            # r, g, b = cv2.split(img)
+            # img = np.asanyarray([r,g,b])
 
 #-----------------------------------------------------------------------------------------
-        img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-        h_deg_left = 0 #色相(Hue)の回転度数
-        s_mag_left = 1 # 彩度(Saturation)の倍率
-        v_mag_left = 0.5 # 明度(Value)の倍率
+            img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
+            h_deg_left = 0 #色相(Hue)の回転度数
+            s_mag_left = 1 # 彩度(Saturation)の倍率
+            v_mag_left = x # 明度(Value)の倍率
  
-        img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
-        img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
-        img_hsv_left[:,:,(2)] = img_hsv_left[:,:,(2)]*v_mag_left # 明度の計算
+            img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
+            img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
+            img_hsv_left[:,:,(2)] = img_hsv_left[:,:,(2)]*v_mag_left # 明度の計算
         
-        bgr_left = cv2.cvtColor(img_hsv_left,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-        img_left = resize(bgr_left, (48, 64), mode='constant')
-        #print(bgr_left)
+            bgr_left = cv2.cvtColor(img_hsv_left,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+            img_left = resize(bgr_left, (48, 64), mode='constant')
+            #print(bgr_left)
 #------------------------------------------------------------------------------------------     
 
-        #r, g, b = cv2.split(img_left)
-        #img_left = np.asanyarray([r,g,b])
+            #r, g, b = cv2.split(img_left)
+            #img_left = np.asanyarray([r,g,b])
 
 #------------------------------------------------------------------------------------------
-        img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-        h_deg_right = 0 #色相(Hue)の回転度数
-        s_mag_right = 1 # 彩度(Saturation)の倍率
-        v_mag_right = 0.5 # 明度(Value)の倍率
+            img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
+            h_deg_right = 0 #色相(Hue)の回転度数
+            s_mag_right = 1 # 彩度(Saturation)の倍率
+            v_mag_right = x # 明度(Value)の倍率
  
-        img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
-        img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
-        img_hsv_right[:,:,(2)] = img_hsv_right[:,:,(2)]*v_mag_right # 明度の計算
+            img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
+            img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
+            img_hsv_right[:,:,(2)] = img_hsv_right[:,:,(2)]*v_mag_right # 明度の計算
         
-        bgr_right = cv2.cvtColor(img_hsv_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-        img_right = resize(bgr_right, (48, 64), mode='constant')
-        #print(bgr_right)
+            bgr_right = cv2.cvtColor(img_hsv_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+            img_right = resize(bgr_right, (48, 64), mode='constant')
+            #print(bgr_right)
 #-------------------------------------------------------------------------------------------
 
-        #r, g, b = cv2.split(img_right)
-        #img_right = np.asanyarray([r,g,b])
+            #r, g, b = cv2.split(img_right)
+            #img_right = np.asanyarray([r,g,b])
+
+
+
+
+
+
+        if self.episode >= 4000:
+            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
+            h_deg = 0 #色相(Hue)の回転度数
+            s_mag = 1 # 彩度(Saturation)の倍率
+            v_mag = 1 # 明度(Value)の倍率
+ 
+            img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
+            img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
+            img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
+
+            bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+            img = resize(bgr, (48, 64), mode='constant')
+            # print(bgr)
+#-----------------------------------------------------------------------------------------
+
+            # r, g, b = cv2.split(img)
+            # img = np.asanyarray([r,g,b])
+
+#-----------------------------------------------------------------------------------------
+            img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
+            h_deg_left = 0 #色相(Hue)の回転度数
+            s_mag_left = 1 # 彩度(Saturation)の倍率
+            v_mag_left = 1 # 明度(Value)の倍率
+ 
+            img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
+            img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
+            img_hsv_left[:,:,(2)] = img_hsv_left[:,:,(2)]*v_mag_left # 明度の計算
+        
+            bgr_left = cv2.cvtColor(img_hsv_left,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+            img_left = resize(bgr_left, (48, 64), mode='constant')
+            #print(bgr_left)
+#------------------------------------------------------------------------------------------     
+
+            #r, g, b = cv2.split(img_left)
+            #img_left = np.asanyarray([r,g,b])
+
+#------------------------------------------------------------------------------------------
+            img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
+            h_deg_right = 0 #色相(Hue)の回転度数
+            s_mag_right = 1 # 彩度(Saturation)の倍率
+            v_mag_right = 1 # 明度(Value)の倍率
+ 
+            img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
+            img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
+            img_hsv_right[:,:,(2)] = img_hsv_right[:,:,(2)]*v_mag_right # 明度の計算
+        
+            bgr_right = cv2.cvtColor(img_hsv_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+            img_right = resize(bgr_right, (48, 64), mode='constant')
+            #print(bgr_right)
+#-------------------------------------------------------------------------------------------
+
+            #r, g, b = cv2.split(img_right)
+            #img_right = np.asanyarray([r,g,b])
+
+
+#--------------------------------------------------------------------------------------------
+
 
 
         ros_time = str(rospy.Time.now())

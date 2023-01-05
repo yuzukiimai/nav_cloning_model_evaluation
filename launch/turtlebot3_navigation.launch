@@ -10,9 +10,17 @@
   <!-- <arg name="initial_pose_x" default="-10.78" /> -->
   <!-- <arg name="initial_pose_y" default="-16.78" /> -->
   <!-- <arg name="initial_pose_a" default="0.0" /> -->
-  <arg name="initial_pose_x" default="-8.1377" />
-  <arg name="initial_pose_y" default="-16.01" />
-  <arg name="initial_pose_a" default="0.01" />
+
+
+  <!-- <arg name="initial_pose_x" default="-8.1377" /> -->
+  <!-- <arg name="initial_pose_y" default="-16.01" /> -->
+  <!-- <arg name="initial_pose_a" default="0.01" /> -->
+
+
+  <arg name="initial_pose_x" default="-10.1856145815951" />
+  <arg name="initial_pose_y" default="28.441895426996574" />
+  <arg name="initial_pose_a" default="-1.57" />
+
   <arg name="use_waypoint_nav" default="true" />
   <arg name="rate" default="3.0"/>
   <arg name="loop" default="true"/>

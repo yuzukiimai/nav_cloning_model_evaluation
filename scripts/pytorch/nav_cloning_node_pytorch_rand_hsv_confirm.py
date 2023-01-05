@@ -151,7 +151,7 @@ class nav_cloning_node:
 
 
 #---------------------------------------------------------------------------------------
-        if self.episode < 4000:
+        if self.episode < 0:
         
 
             x = round(random.uniform(0.5, 1.2), 1)
@@ -215,11 +215,11 @@ class nav_cloning_node:
 
 
 
-        if self.episode >= 4000:
+        if self.episode >= 0:
             img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
             h_deg = 0 #色相(Hue)の回転度数
             s_mag = 1 # 彩度(Saturation)の倍率
-            v_mag = 1 # 明度(Value)の倍率
+            v_mag = 1.2 # 明度(Value)の倍率
  
             img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
             img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
@@ -237,7 +237,7 @@ class nav_cloning_node:
             img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
             h_deg_left = 0 #色相(Hue)の回転度数
             s_mag_left = 1 # 彩度(Saturation)の倍率
-            v_mag_left = 1 # 明度(Value)の倍率
+            v_mag_left = 1.2 # 明度(Value)の倍率
  
             img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
             img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
@@ -255,7 +255,7 @@ class nav_cloning_node:
             img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
             h_deg_right = 0 #色相(Hue)の回転度数
             s_mag_right = 1 # 彩度(Saturation)の倍率
-            v_mag_right = 1 # 明度(Value)の倍率
+            v_mag_right = 1.2 # 明度(Value)の倍率
  
             img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
             img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
@@ -276,10 +276,10 @@ class nav_cloning_node:
 
         ros_time = str(rospy.Time.now())
 
-        if self.episode == 4000:
+        if self.episode == 0:
             self.learning = False
-            self.dl.save(self.save_path)
-            # self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_use_dl_output/20230103_02:03:00/model_gpu.pt")
+            # self.dl.save(self.save_path)
+            self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_use_dl_output/20230103_02:48:48/model_gpu.pt")
 
         if self.episode == 6000:
             os.system('killall roslaunch')

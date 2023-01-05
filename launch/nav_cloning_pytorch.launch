@@ -2,6 +2,7 @@
 <launch>
   <!-- <arg name="script" default="nav_cloning_node_pytorch.py"/> -->
   <arg name="script" default="nav_cloning_node_pytorch_rand_hsv.py"/>
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv_confirm.py"/> -->
   <arg name="mode" default="use_dl_output"/>
   <arg name="robot_x" default="2.915899" />
   <arg name="robot_y" default="0.717698" />

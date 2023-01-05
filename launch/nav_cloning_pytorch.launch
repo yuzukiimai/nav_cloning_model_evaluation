@@ -4,10 +4,12 @@
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv_confirm.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/> -->
-  <arg name="script" default="nav_cloning_node_pytorch_rand_gamma_confirm.py"/>
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma_confirm.py"/> -->
+<arg name="script" default="nav_cloning_node_pytorch_mix.py"/>
 
 
-  <arg name="mode" default="use_dl_output"/>
+  <!-- <arg name="mode" default="use_dl_output"/> -->
+  <arg name="mode" default="mix"/>
   <arg name="robot_x" default="2.915899" />
   <arg name="robot_y" default="0.717698" />
   <arg name="robot_Y" default="0.024363" />

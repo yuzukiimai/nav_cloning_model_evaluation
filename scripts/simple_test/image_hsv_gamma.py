@@ -25,7 +25,7 @@ class img_node:
 
     def loop(self):
         if self.cv_image.size == 640 * 480 * 3:
-            x = round(random.uniform(0.8, 2.0), 1)
+            x = round(random.uniform(0.5, 2.0), 1)
             gamma = x
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):

@@ -25,24 +25,23 @@ class img_node:
 
     def loop(self):
         if self.cv_image.size == 640 * 480 * 3:
-            x = round(random.uniform(0.5, 1.2), 1)
-            # y = round(random.uniform(0.5, 1.2), 1)
-            # z = round(random.uniform(0.5, 1.2), 1)
+            x = round(random.uniform(0.8, 2.0), 1)
+            gamma = x
+            look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
+            for i in range(256):
+                look_up_table[i][0] = (i/255)**(1.0/gamma)*255
+
             img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-            h_deg = 1
-            s_mag = 1
-            v_mag = x
-            img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg
-            img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag
-            img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag
-            bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR)
-            img = resize(bgr, (48, 64), mode='constant')
+            h, s, v = cv2.split(img_hsv)  
+            v_lut = cv2.LUT(v, look_up_table) 
+            s_lut = cv2.LUT(s, look_up_table)
+            merge = cv2.merge([h, s_lut, v_lut]) 
+            bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
+            
             print(bgr)
 
             temp = copy.deepcopy(bgr)
-            # temp = copy.deepcopy(img)
-            cv2.imshow("hsv_Image", temp)
-            # cv2.imshow("Resized_hsv_Image", temp)
+            cv2.imshow("gamma_Image", temp)
             cv2.waitKey(1)
 
 if __name__ == '__main__':

@@ -23,7 +23,7 @@ def draw_training_pos():
     vel = 0.2
     arrow_dict = dict(arrowstyle = "->", color = "black")
     count = 0
-    with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/20221028_14:45:52/training.csv', 'r') as f:
+    with open('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_mix/20230106_07:41:36/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/20221028_05:59:50/training.csv', 'r') as f:
         for row in csv.reader(f):
                 # str_step, mode,loss, angle_error,distance,str_x, str_y, str_the = row

@@ -26,7 +26,6 @@ import copy
 import sys
 import tf
 from nav_msgs.msg import Odometry
-import random
 
 class nav_cloning_node:
     def __init__(self):
@@ -64,7 +63,6 @@ class nav_cloning_node:
         self.pos_the = 0.0
         self.is_started = False
         self.start_time_s = rospy.get_time()
-        self.numbers = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
         os.makedirs(self.path + self.start_time)
 
         # with open(self.path + self.start_time + '/' +  'training.csv', 'w') as f:
@@ -72,7 +70,6 @@ class nav_cloning_node:
         #     writer.writerow(['step', 'mode', 'loss', 'angle_error(rad)', 'distance(m)','x(m)','y(m)', 'the(rad)', 'direction'])
         self.tracker_sub = rospy.Subscriber("/tracker", Odometry, self.callback_tracker)
 
-   
     def callback(self, data):
         try:
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -90,8 +87,6 @@ class nav_cloning_node:
             self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
-
-
 
     def callback_tracker(self, data):
         self.pos_x = data.pose.pose.position.x
@@ -144,96 +139,26 @@ class nav_cloning_node:
             self.is_started = True
         if self.is_started == False:
             return
+        img = resize(self.cv_image, (48, 64), mode='constant')
+        
+        # r, g, b = cv2.split(img)
+        # img = np.asanyarray([r,g,b])
 
-#---------------------------------------------------------------------------------------
-        if self.episode < 4000:
-            x = round(random.uniform(0.8, 1.2), 1)
-            gamma = x
-            look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
-            for i in range(256):
-                look_up_table[i][0] = (i/255)**(1.0/gamma)*255
+        img_left = resize(self.cv_left_image, (48, 64), mode='constant')
+        #r, g, b = cv2.split(img_left)
+        #img_left = np.asanyarray([r,g,b])
 
-
-            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-            h, s, v = cv2.split(img_hsv)  
-            v_lut = cv2.LUT(v, look_up_table) 
-            s_lut = cv2.LUT(s, look_up_table)
-            merge = cv2.merge([h, s_lut, v_lut]) 
-            bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
-            img = resize(bgr, (48, 64), mode='constant')
-            # print(bgr)
-
-#-----------------------------------------------------------------------------------------
-            img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-            h_left, s_left, v_left = cv2.split(img_hsv_left)  
-            v_lut_left = cv2.LUT(v_left, look_up_table) 
-            s_lut_left = cv2.LUT(s_left, look_up_table)
-            merge_left = cv2.merge([h_left, s_lut_left, v_lut_left]) 
-            bgr_left = cv2.cvtColor(merge_left,cv2.COLOR_HSV2BGR)
-            img_left = resize(bgr_left, (48, 64), mode='constant')
-            #print(bgr_left)
-#------------------------------------------------------------------------------------------     
-
-            img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-            h_right, s_right, v_right = cv2.split(img_hsv_right)  
-            v_lut_right = cv2.LUT(v_right, look_up_table) 
-            s_lut_right = cv2.LUT(s_right, look_up_table)
-            merge_right = cv2.merge([h_right, s_lut_right, v_lut_right]) 
-            bgr_right = cv2.cvtColor(merge_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img_right = resize(bgr_right, (48, 64), mode='constant')
-            #print(bgr_right)
-#-------------------------------------------------------------------------------------------
-
-
-
-        if self.episode >= 4000:
-            gamma = 1.0
-            look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
-            for i in range(256):
-                look_up_table[i][0] = (i/255)**(1.0/gamma)*255
-
-            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-            h, s, v = cv2.split(img_hsv)  
-            v_lut = cv2.LUT(v, look_up_table) 
-            s_lut = cv2.LUT(s, look_up_table)
-            merge = cv2.merge([h, s_lut, v_lut]) 
-            bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
-            img = resize(bgr, (48, 64), mode='constant')
-            # print(bgr)
-
-#--------------------------------------------------------------------------------------------------
-            img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-            h_left, s_left, v_left = cv2.split(img_hsv_left)  
-            v_lut_left = cv2.LUT(v_left, look_up_table) 
-            s_lut_left = cv2.LUT(s_left, look_up_table)
-            merge_left = cv2.merge([h_left, s_lut_left, v_lut_left]) 
-            bgr_left = cv2.cvtColor(merge_left,cv2.COLOR_HSV2BGR)
-            img_left = resize(bgr_left, (48, 64), mode='constant')
-            #print(bgr_left)
-
-#------------------------------------------------------------------------------------------     
-
-            img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-            h_right, s_right, v_right = cv2.split(img_hsv_right)  
-            v_lut_right = cv2.LUT(v_right, look_up_table) 
-            s_lut_right = cv2.LUT(s_right, look_up_table)
-            merge_right = cv2.merge([h_right, s_lut_right, v_lut_right]) 
-            bgr_right = cv2.cvtColor(merge_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img_right = resize(bgr_right, (48, 64), mode='constant')
-            #print(bgr_right)
-
-#-------------------------------------------------------------------------------------------
-
-
-
+        img_right = resize(self.cv_right_image, (48, 64), mode='constant')
+        #r, g, b = cv2.split(img_right)
+        #img_right = np.asanyarray([r,g,b])
         ros_time = str(rospy.Time.now())
 
         if self.episode == 4000:
             self.learning = False
             self.dl.save(self.save_path)
-            # self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_use_dl_output/20230103_02:03:00/model_gpu.pt")
+            #self.dl.load(self.load_path)
 
-        if self.episode == 5700:
+        if self.episode == 5600:
             os.system('killall roslaunch')
             sys.exit()
 
@@ -269,6 +194,8 @@ class nav_cloning_node:
 
             elif self.mode == "use_dl_output":
                 action, loss = self.dl.act_and_trains(img , target_action)
+                action = action * 3
+                # action = max(min(action, 0.45), -0.45)
                 if abs(target_action) < 0.1:
                     action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
                     action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
@@ -385,15 +312,12 @@ class nav_cloning_node:
             self.vel.angular.z = target_action
             self.nav_pub.publish(self.vel)
 
-        temp = copy.deepcopy(bgr)
-        cv2.imshow("HSV Center Image", temp)
-        # temp = copy.deepcopy(img)
-        # cv2.imshow("HSV Center Resized Image", temp)
-        temp = copy.deepcopy(bgr_left)
-        cv2.imshow("HSV Left Image", temp)
-        temp = copy.deepcopy(bgr_right)
-        cv2.imshow("HSV Right Image", temp)
-        cv2.imshow("/camera/rgb/image_raw", self.cv_image)
+        temp = copy.deepcopy(img)
+        cv2.imshow("Resized Image", temp)
+        temp = copy.deepcopy(img_left)
+        cv2.imshow("Resized Left Image", temp)
+        temp = copy.deepcopy(img_right)
+        cv2.imshow("Resized Right Image", temp)
         cv2.waitKey(1)
 
 if __name__ == '__main__':

@@ -6,14 +6,18 @@
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma_confirm.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_mix.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_action.py"/> -->
+  <arg name="script" default="nav_cloning_node_pytorch_action.py"/>
   <!-- <arg name="script" default="nav_cloning_node_pytorch_edge.py"/> -->
-  <arg name="script" default="nav_cloning_node_pytorch_extreme.py"/>
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_extreme.py"/> -->
+  
+
 
 
   <!-- <arg name="mode" default="use_dl_output"/> -->
+  <!-- <arg name="mode" default="change_dataset_balance"/> -->
   <!-- <arg name="mode" default="mix"/> -->
-  <arg name="mode" default="extreme"/>
+  <!-- <arg name="mode" default="extreme"/> -->
+  <arg name="mode" default="action_extreme"/>
   <arg name="robot_x" default="2.915899" />
   <arg name="robot_y" default="0.717698" />
   <arg name="robot_Y" default="0.024363" />

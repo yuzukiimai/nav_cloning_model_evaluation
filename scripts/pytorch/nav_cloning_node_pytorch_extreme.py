@@ -167,99 +167,60 @@ class nav_cloning_node:
             distance = self.min_distance
 
 
-            if self.mode == "extreme":
+            if self.mode == "use_dl_output":
+                action, loss = self.dl.act_and_trains(img , target_action)
+                action = action * 3
+                # action = max(min(action, 0.45), -0.45)
+                if abs(target_action) < 0.1:
+                    action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                    action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
+                angle_error = abs(action - target_action)
+                if distance > 0.1:
+                    self.select_dl = False
+                elif distance < 0.05:
+                    self.select_dl = True
+                if self.select_dl and self.episode >= 0:
+                    target_action = action
+
+
+
+
+            elif self.mode == "extreme":
                 if distance < 0.05:
                     action, loss = self.dl.act_and_trains(img , target_action)
-
                     if abs(target_action) < 0.1:
                         action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
                         action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-
-
-
+                        
                 elif 0.05 <= distance < 0.1:
-                    self.dl.make_dataset(img , target_action)
+                    # self.dl.make_dataset(img , target_action)
                     action, loss = self.dl.act_and_trains(img , target_action)
-
                     if abs(target_action) < 0.1:
-                        self.dl.make_dataset(img_left , target_action - 0.2)
+                        # self.dl.make_dataset(img_left , target_action - 0.2)
                         action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
+                        # self.dl.make_dataset(img_right , target_action + 0.2)
                         action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-
                     line = [str(self.episode), "training", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
                     with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                         writer = csv.writer(f, lineterminator='\n')
                         writer.writerow(line)
-
-
-
                 else:
                     self.dl.make_dataset(img , target_action)
                     self.dl.make_dataset(img , target_action)
                     self.dl.make_dataset(img , target_action)
                     self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
                     action, loss = self.dl.act_and_trains(img , target_action)
-
                     if abs(target_action) < 0.1:
                         self.dl.make_dataset(img_left , target_action - 0.2)
                         self.dl.make_dataset(img_left , target_action - 0.2)
                         self.dl.make_dataset(img_left , target_action - 0.2)
                         self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
                         action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
-                        
-                        
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
                         self.dl.make_dataset(img_right , target_action + 0.2)
                         self.dl.make_dataset(img_right , target_action + 0.2)
                         self.dl.make_dataset(img_right , target_action + 0.2)
                         self.dl.make_dataset(img_right , target_action + 0.2)
                         action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-
                     line = [str(self.episode), "training", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
                     with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                         writer = csv.writer(f, lineterminator='\n')
@@ -267,8 +228,6 @@ class nav_cloning_node:
                     with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                         writer = csv.writer(f, lineterminator='\n')
                         writer.writerow(line)
-
-
 
 
                 angle_error = abs(action - target_action)
@@ -280,6 +239,7 @@ class nav_cloning_node:
                     target_action = action
 
             
+
             # end mode
 
             self.episode += 1

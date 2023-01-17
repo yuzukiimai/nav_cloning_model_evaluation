@@ -31,7 +31,7 @@ import random
 class nav_cloning_node:
     def __init__(self):
         rospy.init_node('nav_cloning_node', anonymous=True)
-        self.mode = rospy.get_param("/nav_cloning_node/mode", "use_dl_output")
+        self.mode = rospy.get_param("/nav_cloning_node/mode", "change_dataset_balance")
         self.action_num = 1
         self.dl = deep_learning(n_action = self.action_num)
         self.bridge = CvBridge()
@@ -147,8 +147,9 @@ class nav_cloning_node:
 
 #---------------------------------------------------------------------------------------
         if self.episode < 4000:
-            x = round(random.uniform(0.8, 1.2), 1)
+            x = round(random.uniform(0.5, 2.0), 1)
             gamma = x
+            print(gamma)
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255
@@ -187,7 +188,7 @@ class nav_cloning_node:
 
 
         if self.episode >= 4000:
-            gamma = 1.0
+            gamma = 1.5
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255

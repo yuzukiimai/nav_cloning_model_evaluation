@@ -147,9 +147,8 @@ class nav_cloning_node:
 
 #---------------------------------------------------------------------------------------
         if self.episode < 4000:
-            x = round(random.uniform(0.5, 2.0), 1)
+            x = round(random.uniform(0.3, 2.0), 1)
             gamma = x
-            print(gamma)
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255
@@ -188,7 +187,7 @@ class nav_cloning_node:
 
 
         if self.episode >= 4000:
-            gamma = 1.5
+            gamma = 1.0
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255

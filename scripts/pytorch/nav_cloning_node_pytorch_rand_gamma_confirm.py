@@ -31,7 +31,7 @@ import random
 class nav_cloning_node:
     def __init__(self):
         rospy.init_node('nav_cloning_node', anonymous=True)
-        self.mode = rospy.get_param("/nav_cloning_node/mode", "use_dl_output")
+        self.mode = rospy.get_param("/nav_cloning_node/mode", "change_dataset_balance")
         self.action_num = 1
         self.dl = deep_learning(n_action = self.action_num)
         self.bridge = CvBridge()
@@ -147,7 +147,7 @@ class nav_cloning_node:
 
 #---------------------------------------------------------------------------------------
         if self.episode < 0:
-            x = round(random.uniform(0.8, 2.0), 1)
+            x = round(random.uniform(0.3, 2.0), 1)
             gamma = x
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
@@ -187,7 +187,7 @@ class nav_cloning_node:
 
 
         if self.episode >= 0:
-            gamma = 1.5
+            gamma = 2.5
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255
@@ -231,7 +231,7 @@ class nav_cloning_node:
         if self.episode == 0:
             self.learning = False
             # self.dl.save(self.save_path)
-            self.dl.load("/home/yuzuki/model/gamma/20230106_00:09:51/model_gpu.pt")
+            self.dl.load("/home/yuzuki/model/model_gpu.pt")
 
         if self.episode == 6000:
             os.system('killall roslaunch')

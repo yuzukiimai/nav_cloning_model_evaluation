@@ -30,9 +30,10 @@ from nav_msgs.msg import Odometry
 class nav_cloning_node:
     def __init__(self):
         rospy.init_node('nav_cloning_node', anonymous=True)
-        self.mode = rospy.get_param("/nav_cloning_node/mode", "change_dataset_balance")
+        self.mode = rospy.get_param("/nav_cloning_node/mode", "use_dl_output")
         self.action_num = 1
         self.dl = deep_learning(n_action = self.action_num)
+        self.dl2 = deep_learning(n_action = self.action_num)
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.callback)
         self.image_left_sub = rospy.Subscriber("/camera_left/rgb/image_raw", Image, self.callback_left_camera)
@@ -55,12 +56,13 @@ class nav_cloning_node:
         self.learning = True
         self.select_dl = False
         self.start_time = time.strftime("%Y%m%d_%H:%M:%S")
-        self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/result_'+str(self.mode)+'/'
-        self.save_path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/model_'+str(self.mode)+'/'
+        self.path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/result_with_dir_'+str(self.mode)+'/'
+        self.save_path = roslib.packages.get_pkg_dir('nav_cloning') + '/data/model_with_dir_'+str(self.mode)+'/'
         self.previous_reset_time = 0
         self.pos_x = 0.0
         self.pos_y = 0.0
         self.pos_the = 0.0
+        self.action2 = 0.0
         self.is_started = False
         self.start_time_s = rospy.get_time()
         os.makedirs(self.path + self.start_time)
@@ -113,6 +115,7 @@ class nav_cloning_node:
     def callback_vel(self, data):
         self.vel = data
         self.action = self.vel.angular.z
+        self.action2 = self.vel.linear.x
 
     def callback_dl_training(self, data):
         resp = SetBoolResponse()
@@ -140,7 +143,7 @@ class nav_cloning_node:
         if self.is_started == False:
             return
         img = resize(self.cv_image, (48, 64), mode='constant')
-        
+
         # r, g, b = cv2.split(img)
         # img = np.asanyarray([r,g,b])
 
@@ -153,17 +156,18 @@ class nav_cloning_node:
         #img_right = np.asanyarray([r,g,b])
         ros_time = str(rospy.Time.now())
 
-        if self.episode == 4000:
+        if self.episode == 3000:
             self.learning = False
             self.dl.save(self.save_path)
             #self.dl.load(self.load_path)
 
-        if self.episode == 5700:
+        if self.episode == 5000:
             os.system('killall roslaunch')
             sys.exit()
 
         if self.learning:
             target_action = self.action
+            target_action2 = self.action2
             distance = self.min_distance
 
             if self.mode == "manual":
@@ -193,59 +197,16 @@ class nav_cloning_node:
                     target_action = 0
 
             elif self.mode == "use_dl_output":
-                action, loss = self.dl.act_and_trains(img , target_action)
+                # action, action2, loss = self.dl.act_and_trains(img , target_action, target_action2 )
+                action, loss = self.dl.act_and_trains(img , target_action )
+                action2, loss2 = self.dl2.act_and_trains(img , target_action2 )
                 if abs(target_action) < 0.1:
-                    action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                    # action_left,action_left2,loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2, target_action2)
+                    # action_right,action_right2, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2,target_action2)
+                    action_left,loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                    action_left2,loss_left2  = self.dl2.act_and_trains(img_left , target_action2)
                     action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-                angle_error = abs(action - target_action)
-                if distance > 0.1:
-                    self.select_dl = False
-                elif distance < 0.05:
-                    self.select_dl = True
-                if self.select_dl and self.episode >= 0:
-                    target_action = action
-
-
-
-
-            elif self.mode == "change_dataset_balance":
-                if distance < 0.05:
-                    action, loss = self.dl.act_and_trains(img , target_action)
-                    if abs(target_action) < 0.1:
-                        action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
-                        action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-                elif 0.05 <= distance < 0.1:
-                    self.dl.make_dataset(img , target_action)
-                    action, loss = self.dl.act_and_trains(img , target_action)
-                    if abs(target_action) < 0.1:
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-                    line = [str(self.episode), "training", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
-                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
-                        writer = csv.writer(f, lineterminator='\n')
-                        writer.writerow(line)
-                else:
-                    self.dl.make_dataset(img , target_action)
-                    self.dl.make_dataset(img , target_action)
-                    action, loss = self.dl.act_and_trains(img , target_action)
-                    if abs(target_action) < 0.1:
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_left , target_action - 0.2)
-                        action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        self.dl.make_dataset(img_right , target_action + 0.2)
-                        action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-                    line = [str(self.episode), "training", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
-                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
-                        writer = csv.writer(f, lineterminator='\n')
-                        writer.writerow(line)
-                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
-                        writer = csv.writer(f, lineterminator='\n')
-                        writer.writerow(line)
-
-
+                    action_right2, loss_right2 = self.dl2.act_and_trains(img_right , target_action2)
                 angle_error = abs(action - target_action)
                 if distance > 0.1:
                     self.select_dl = False
@@ -270,7 +231,7 @@ class nav_cloning_node:
                     if abs(target_action) < 0.1:
                         action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
                         action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
-                
+
                 if distance > 0.15 or angle_error > 0.3:
                     self.select_dl = False
                 # if distance > 0.1:
@@ -282,20 +243,21 @@ class nav_cloning_node:
 
             # end mode
 
+            print(str(self.episode) + ", training, loss: " + str(loss) + ", angle_error: " + str(angle_error) + ", distance: " + str(distance), ", action2: " + str(action2))
             self.episode += 1
-            print(str(self.episode) + ", training, loss: " + str(loss) + ", angle_error: " + str(angle_error) + ", distance: " + str(distance))
-            # print(str(self.episode)  + ", distance: " + str(distance))
             # line = [str(self.episode), "training", str(loss), str(angle_error), str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
             line = [str(self.episode), "training", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
             with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                 writer = csv.writer(f, lineterminator='\n')
                 writer.writerow(line)
-            self.vel.linear.x = 0.2
+            self.vel.linear.x = self.action2
             self.vel.angular.z = target_action
             self.nav_pub.publish(self.vel)
 
         else:
+            # target_action, target_action2 = self.dl.act(img)
             target_action = self.dl.act(img)
+            target_action2 = self.dl2.act(img)
             distance = self.min_distance
             print(str(self.episode) + ", test, angular:" + str(target_action) + ", distance: " + str(distance))
 
@@ -306,7 +268,7 @@ class nav_cloning_node:
             with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                 writer = csv.writer(f, lineterminator='\n')
                 writer.writerow(line)
-            self.vel.linear.x = 0.2
+            self.vel.linear.x = target_action2
             self.vel.angular.z = target_action
             self.nav_pub.publish(self.vel)
 
@@ -320,7 +282,7 @@ class nav_cloning_node:
 
 if __name__ == '__main__':
     rg = nav_cloning_node()
-    DURATION = 0.2
+    DURATION = 0.25
     r = rospy.Rate(1 / DURATION)
     while not rospy.is_shutdown():
         rg.loop()

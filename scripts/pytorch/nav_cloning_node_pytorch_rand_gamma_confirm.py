@@ -187,7 +187,7 @@ class nav_cloning_node:
 
 
         if self.episode >= 0:
-            gamma = 2.5
+            gamma = 1.0
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255
@@ -231,7 +231,7 @@ class nav_cloning_node:
         if self.episode == 0:
             self.learning = False
             # self.dl.save(self.save_path)
-            self.dl.load("/home/yuzuki/model/model_gpu.pt")
+            self.dl.load("/home/yuzuki/model/0.3-2.0_gamma/model_gpu.pt")
 
         if self.episode == 6000:
             os.system('killall roslaunch')

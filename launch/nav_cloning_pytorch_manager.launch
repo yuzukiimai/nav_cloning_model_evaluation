@@ -3,8 +3,8 @@
   <!-- <arg name="script" default="nav_cloning_node_pytorch_default.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv_confirm.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/> -->
-  <arg name="script" default="nav_cloning_node_pytorch_rand_gamma_confirm.py"/>
+  <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/>
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma_confirm.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_mix.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_action.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_edge.py"/> -->
@@ -32,6 +32,29 @@
     <arg name="debug" value="false"/>
   </include>
 
+  <!-- <include file="$(find waypoint_server)/launch/waypoint_server.launch">
+    <arg name="output" default="screen"/>
+    <arg name="goal_topic" default="/move_base_simple/goal"/>
+    <arg name="regist_goal_topic" default="/clicked_point"/>
+    <arg name="config_file" default="$(find waypoint_server)/config/waypoint_server.yaml"/>
+    <group ns="waypoint_manager">
+      <node pkg="waypoint_server" type="waypoint_server_node" name="waypoint_server" output="$(arg output)">
+        <rosparam command="load" file="$(arg config_file)" subst_value="true"/>
+        <remap from="waypoint/regist_point" to="$(arg regist_goal_topic)"/>
+      </node>
+      <node pkg="waypoint_server" type="waypoint_to_posestamped_node" name="waypoint_to_posestamped" output="$(arg output)">
+        <rosparam command="load" file="$(arg config_file)" subst_value="true"/>
+        <remap from="move_base_simple/goal" to="$(arg goal_topic)"/>
+      </node>
+      <node pkg="waypoint_visualization" type="waypoint_visualization_node" name="waypoint_visualization" output="$(arg output)">
+        <rosparam command="load" file="$(arg config_file)" subst_value="true"/>
+        <remap from="waypoint/regist_point" to="$(arg regist_goal_topic)"/>
+      </node>
+      <node pkg="goal_event_handler" type="radius_node" name="radius_node" output="$(arg output)">
+        <rosparam command="load" file="$(arg config_file)" subst_value="true"/>
+      </node>
+    </group>
+  </include> -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_waffle_pi.urdf.xacro" />
 
   <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model mobile_base -x $(arg robot_x) -y $(arg robot_y) -z 0.0 -Y $(arg robot_Y) -param robot_description" />
@@ -42,7 +65,7 @@
         name="timed_roslaunch" output="screen" />
 
   <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
-        args="8 nav_cloning turtlebot3_navigation.launch model:=waffle map_file:=$(find nav_cloning)/maps/willowgarage.yaml waypoints_file:=$(find nav_cloning)/maps/willow_loop.yaml"
+        args="8 nav_cloning turtlebot3_navigation.launch model:=waffle map_file:=$(find nav_cloning)/maps/willowgarage.yaml"
         name="timed_roslaunch2" >
   </node>
   <!-- <node pkg="timed_roslaunch" type="timed_roslaunch.sh" -->
@@ -50,8 +73,8 @@
   <!--       name="timed_roslaunch2" > -->
   <!-- </node> -->
 
-  <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
+  <!-- <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
         args="20 nav_cloning start_wp_nav.launch"
         name="timed_roslaunch3" >
-  </node>
+  </node> -->
 </launch>

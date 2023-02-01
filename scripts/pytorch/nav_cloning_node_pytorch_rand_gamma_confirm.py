@@ -64,7 +64,6 @@ class nav_cloning_node:
         self.pos_the = 0.0
         self.is_started = False
         self.start_time_s = rospy.get_time()
-        self.numbers = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
         os.makedirs(self.path + self.start_time)
 
         # with open(self.path + self.start_time + '/' +  'training.csv', 'w') as f:
@@ -231,7 +230,7 @@ class nav_cloning_node:
         if self.episode == 0:
             self.learning = False
             # self.dl.save(self.save_path)
-            self.dl.load("/home/yuzuki/model/0.3-2.0_gamma/model_gpu.pt")
+            self.dl.load("/home/yuzuki/model_gpu.pt")
 
         if self.episode == 6000:
             os.system('killall roslaunch')

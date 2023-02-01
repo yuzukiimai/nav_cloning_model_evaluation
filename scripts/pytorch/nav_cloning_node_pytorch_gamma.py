@@ -64,6 +64,8 @@ class nav_cloning_node:
         self.pos_the = 0.0
         self.is_started = False
         self.start_time_s = rospy.get_time()
+        self.numbers = [0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4,2.5]
+        self.i = 0
         os.makedirs(self.path + self.start_time)
 
         # with open(self.path + self.start_time + '/' +  'training.csv', 'w') as f:
@@ -146,13 +148,19 @@ class nav_cloning_node:
 
 #---------------------------------------------------------------------------------------
         if self.episode < 4000:
-            x = round(random.uniform(0.3, 2.0), 1)
+
+            x = self.numbers[self.i]
             gamma = x
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255
+                    
+            if self.i < 23:
+                self.i = self.i + 1
+            if self.i >= 23:
+                self.i = 0
 
-
+            print(self.numbers[self.i])
             img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
             h, s, v = cv2.split(img_hsv)  
             v_lut = cv2.LUT(v, look_up_table) 

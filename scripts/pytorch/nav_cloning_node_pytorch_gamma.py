@@ -160,7 +160,7 @@ class nav_cloning_node:
             if self.i >= 23:
                 self.i = 0
 
-            print(self.numbers[self.i])
+            print(gamma)
             img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
             h, s, v = cv2.split(img_hsv)  
             v_lut = cv2.LUT(v, look_up_table) 

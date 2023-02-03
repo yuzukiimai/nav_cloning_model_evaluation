@@ -1,26 +1,56 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="script" default="nav_cloning_node_pytorch_mix.py"/>
-  <arg name="mode" default="mix"/>
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_default.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv_confirm.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma_confirm.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_mix.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_action.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_edge.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_extreme.py"/> -->
+  <arg name="script" default="nav_cloning_node_pytorch_gamma.py"/>
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma_sharp.py"/> -->
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma_sharp_confirm.py"/> -->
 
-  <arg name="robot_x" default="-10.1856145815951" />
-  <arg name="robot_y" default="28.441895426996574" />
-  <arg name="robot_Y" default="-1.57" />
+
+
+  <!-- <arg name="mode" default="use_dl_output"/> -->
+  <arg name="mode" default="change_dataset_balance"/>
+  <!-- <arg name="mode" default="mix"/> -->
+  <!-- <arg name="mode" default="extreme"/> -->
+  <!-- <arg name="mode" default="action_extreme"/> -->
+
+
+
+  <!-- 2-3 -->
+  <!-- <arg name="robot_x" default="-10.1856145815951" /> -->
+  <!-- <arg name="robot_y" default="28.441895426996574" /> -->
+  <!-- <arg name="robot_Y" default="-1.57" /> -->
+
+  <!-- 2-3_real -->
+  <arg name="robot_x" default="-1.480409" />
+  <arg name="robot_y" default="-3.962090" />
+  <arg name="robot_z" default="0.116067" />
+  <arg name="robot_Y" default="-0.024075" />
+
 
   <rosparam param="/nav_cloning_node/mode" subst_value="True">$(arg mode)</rosparam>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find nav_cloning)/world/Tsudanuma_2-3.world"/> 
+    <arg name="world_name" value="$(find nav_cloning)/world/tsudanuma_scan.world"/> 
+    <!-- <arg name="world_name" value="$(find nav_cloning)/world/Tsudanuma_2-3.world"/>  -->
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
-    <arg name="gui" value="false"/>
+    <arg name="gui" value="true"/>
     <arg name="headless" value="false"/>
     <arg name="debug" value="false"/>
   </include>
 
+
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_waffle_pi.urdf.xacro" />
 
-  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model mobile_base -x $(arg robot_x) -y $(arg robot_y) -z 0.0 -Y $(arg robot_Y) -param robot_description" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model mobile_base -x $(arg robot_x) -y $(arg robot_y) -z $(arg robot_z)  -Y $(arg robot_Y) -param robot_description" />
 
   <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
         args="5 nav_cloning nav_cloning.launch script:=$(arg script)"
@@ -30,13 +60,9 @@
         args="8 nav_cloning turtlebot3_navigation.launch model:=waffle map_file:=$(find nav_cloning)/maps/cit_3f_map.yaml waypoints_file:=$(find nav_cloning)/maps/cit3f_way.yaml"
         name="timed_roslaunch2" >
   </node>
-  <!-- <node pkg="timed_roslaunch" type="timed_roslaunch.sh" -->
-  <!--       args="8 nav_cloning turtlebot3_navigation.launch model:=waffle map_file:=$(find nav_cloning)/maps/willowgarage.yaml waypoints_file:=$(find nav_cloning)/maps/test_loop.yaml" -->
-  <!--       name="timed_roslaunch2" > -->
-  <!-- </node> -->
 
   <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
-        args="20 nav_cloning start_wp_nav.launch"
+        args="30 nav_cloning start_wp_nav.launch"
         name="timed_roslaunch3" >
   </node>
 </launch>

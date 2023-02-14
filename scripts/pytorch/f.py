@@ -125,21 +125,17 @@ class deep_learning:
         loss = self.criterion(y_train, t_train) 
         loss.backward()
         self.optimizer.step()
-        return loss.item() #default
-        # return loss.item(), t_train.tolist() #f_masa
+        return loss.item(), t_train.tolist()
 
     def act_and_trains(self, img,target_angle):
         self.make_dataset(img,target_angle)
-        loss = self.trains() #default
-        # loss, t_train = self.trains() #f_masa
-
+        loss, t_train = self.trains()
         #<test>
         self.net.eval()
         x = torch.tensor(img,dtype =torch.float32, device=self.device).unsqueeze(0)
         x=x.permute(0,3,1,2)
         action_value_training = self.net(x)
-        return action_value_training[0][0].item(), loss #default
-        # return action_value_training[0][0].item(), loss, t_train #f_masa
+        return action_value_training[0][0].item(), loss, t_train
 
     def act(self, img):
             self.net.eval()

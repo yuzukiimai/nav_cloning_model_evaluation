@@ -185,6 +185,7 @@ class nav_cloning_node:
 
 
 
+
             elif self.mode == "extreme":
                 if distance < 0.05:
                     action, loss = self.dl.act_and_trains(img , target_action)
@@ -193,24 +194,42 @@ class nav_cloning_node:
                         action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
                         
                 elif 0.05 <= distance < 0.1:
-                    # self.dl.make_dataset(img , target_action)
+                    self.dl.make_dataset(img , target_action)
                     action, loss = self.dl.act_and_trains(img , target_action)
                     if abs(target_action) < 0.1:
-                        # self.dl.make_dataset(img_left , target_action - 0.2)
+                        self.dl.make_dataset(img_left , target_action - 0.2)
                         action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
-                        # self.dl.make_dataset(img_right , target_action + 0.2)
+                        self.dl.make_dataset(img_right , target_action + 0.2)
                         action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
                     line = [str(self.episode), "training", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
                     with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                         writer = csv.writer(f, lineterminator='\n')
                         writer.writerow(line)
+                    
+                    #-------------------------------------------------------------------------------------------------------------
+                    # line_t_train =[str(self.episode), str(distance), str(t_train)]
+                    # with open(self.path + self.start_time + '/' + 't_train.csv', 'a') as f:
+                    #     writer2 = csv.writer(f, lineterminator='\n')
+                    #     writer2.writerow(line_t_train)
+                    #-------------------------------------------------------------------------------------------------------------
+                
                 else:
                     self.dl.make_dataset(img , target_action)
                     self.dl.make_dataset(img , target_action)
                     self.dl.make_dataset(img , target_action)
                     self.dl.make_dataset(img , target_action)
+                    self.dl.make_dataset(img , target_action)
+                    self.dl.make_dataset(img , target_action)
+                    self.dl.make_dataset(img , target_action)
+                    self.dl.make_dataset(img , target_action)
+                    self.dl.make_dataset(img , target_action)
                     action, loss = self.dl.act_and_trains(img , target_action)
                     if abs(target_action) < 0.1:
+                        self.dl.make_dataset(img_left , target_action - 0.2)
+                        self.dl.make_dataset(img_left , target_action - 0.2)
+                        self.dl.make_dataset(img_left , target_action - 0.2)
+                        self.dl.make_dataset(img_left , target_action - 0.2)
+                        self.dl.make_dataset(img_left , target_action - 0.2)
                         self.dl.make_dataset(img_left , target_action - 0.2)
                         self.dl.make_dataset(img_left , target_action - 0.2)
                         self.dl.make_dataset(img_left , target_action - 0.2)
@@ -220,15 +239,48 @@ class nav_cloning_node:
                         self.dl.make_dataset(img_right , target_action + 0.2)
                         self.dl.make_dataset(img_right , target_action + 0.2)
                         self.dl.make_dataset(img_right , target_action + 0.2)
+                        self.dl.make_dataset(img_right , target_action + 0.2)
+                        self.dl.make_dataset(img_right , target_action + 0.2)
+                        self.dl.make_dataset(img_right , target_action + 0.2)
+                        self.dl.make_dataset(img_right , target_action + 0.2)
+                        self.dl.make_dataset(img_right , target_action + 0.2)
                         action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
                     line = [str(self.episode), "training", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
                     with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                         writer = csv.writer(f, lineterminator='\n')
                         writer.writerow(line)
+
+                    #------------------------------------------------------------------------------------------------------------
+                    # line_t_train =[str(self.episode), str(distance), str(t_train)]
+                    # with open(self.path + self.start_time + '/' + 't_train.csv', 'a') as f:
+                    #     writer2 = csv.writer(f, lineterminator='\n')
+                    #     writer2.writerow(line_t_train)
+                    #-------------------------------------------------------------------------------------------------------------
+                    
                     with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                         writer = csv.writer(f, lineterminator='\n')
                         writer.writerow(line)
-
+                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
+                        writer = csv.writer(f, lineterminator='\n')
+                        writer.writerow(line)
+                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
+                        writer = csv.writer(f, lineterminator='\n')
+                        writer.writerow(line)
+                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
+                        writer = csv.writer(f, lineterminator='\n')
+                        writer.writerow(line)
+                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
+                        writer = csv.writer(f, lineterminator='\n')
+                        writer.writerow(line)
+                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
+                        writer = csv.writer(f, lineterminator='\n')
+                        writer.writerow(line)
+                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
+                        writer = csv.writer(f, lineterminator='\n')
+                        writer.writerow(line)
+                    with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
+                        writer = csv.writer(f, lineterminator='\n')
+                        writer.writerow(line)
 
                 angle_error = abs(action - target_action)
                 if distance > 0.1:
@@ -250,6 +302,15 @@ class nav_cloning_node:
             with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                 writer = csv.writer(f, lineterminator='\n')
                 writer.writerow(line)
+            
+            #--------------------------------------------------------------------------
+            # line_t_train =[str(self.episode), str(distance), str(t_train)]
+            # with open(self.path + self.start_time + '/' + 't_train.csv', 'a') as f:
+            #     writer2 = csv.writer(f, lineterminator='\n')
+            #     writer2.writerow(line_t_train)
+            #--------------------------------------------------------------------------
+
+
             self.vel.linear.x = 0.2
             self.vel.angular.z = target_action
             self.nav_pub.publish(self.vel)

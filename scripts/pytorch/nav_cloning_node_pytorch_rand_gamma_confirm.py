@@ -144,44 +144,44 @@ class nav_cloning_node:
         if self.is_started == False:
             return
 
-#---------------------------------------------------------------------------------------
-        if self.episode < 0:
-            x = round(random.uniform(0.3, 2.0), 1)
-            gamma = x
-            look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
-            for i in range(256):
-                look_up_table[i][0] = (i/255)**(1.0/gamma)*255
+# #---------------------------------------------------------------------------------------
+#         if self.episode < 0:
+#             x = round(random.uniform(0.3, 2.0), 1)
+#             gamma = x
+#             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
+#             for i in range(256):
+#                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255
 
 
-            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-            h, s, v = cv2.split(img_hsv)  
-            v_lut = cv2.LUT(v, look_up_table) 
-            s_lut = cv2.LUT(s, look_up_table)
-            merge = cv2.merge([h, s_lut, v_lut]) 
-            bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
-            img = resize(bgr, (48, 64), mode='constant')
-            # print(bgr)
+#             img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
+#             h, s, v = cv2.split(img_hsv)  
+#             v_lut = cv2.LUT(v, look_up_table) 
+#             s_lut = cv2.LUT(s, look_up_table)
+#             merge = cv2.merge([h, s_lut, v_lut]) 
+#             bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
+#             img = resize(bgr, (48, 64), mode='constant')
+#             # print(bgr)
 
-#-----------------------------------------------------------------------------------------
-            img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-            h_left, s_left, v_left = cv2.split(img_hsv_left)  
-            v_lut_left = cv2.LUT(v_left, look_up_table) 
-            s_lut_left = cv2.LUT(s_left, look_up_table)
-            merge_left = cv2.merge([h_left, s_lut_left, v_lut_left]) 
-            bgr_left = cv2.cvtColor(merge_left,cv2.COLOR_HSV2BGR)
-            img_left = resize(bgr_left, (48, 64), mode='constant')
-            #print(bgr_left)
-#------------------------------------------------------------------------------------------     
+# #-----------------------------------------------------------------------------------------
+#             img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
+#             h_left, s_left, v_left = cv2.split(img_hsv_left)  
+#             v_lut_left = cv2.LUT(v_left, look_up_table) 
+#             s_lut_left = cv2.LUT(s_left, look_up_table)
+#             merge_left = cv2.merge([h_left, s_lut_left, v_lut_left]) 
+#             bgr_left = cv2.cvtColor(merge_left,cv2.COLOR_HSV2BGR)
+#             img_left = resize(bgr_left, (48, 64), mode='constant')
+#             #print(bgr_left)
+# #------------------------------------------------------------------------------------------     
 
-            img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-            h_right, s_right, v_right = cv2.split(img_hsv_right)  
-            v_lut_right = cv2.LUT(v_right, look_up_table) 
-            s_lut_right = cv2.LUT(s_right, look_up_table)
-            merge_right = cv2.merge([h_right, s_lut_right, v_lut_right]) 
-            bgr_right = cv2.cvtColor(merge_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img_right = resize(bgr_right, (48, 64), mode='constant')
-            #print(bgr_right)
-#-------------------------------------------------------------------------------------------
+#             img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
+#             h_right, s_right, v_right = cv2.split(img_hsv_right)  
+#             v_lut_right = cv2.LUT(v_right, look_up_table) 
+#             s_lut_right = cv2.LUT(s_right, look_up_table)
+#             merge_right = cv2.merge([h_right, s_lut_right, v_lut_right]) 
+#             bgr_right = cv2.cvtColor(merge_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
+#             img_right = resize(bgr_right, (48, 64), mode='constant')
+#             #print(bgr_right)
+# #-------------------------------------------------------------------------------------------
 
 
 

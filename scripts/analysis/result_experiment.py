@@ -23,7 +23,7 @@ def draw_training_pos():
     count = 0
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_10/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_2000step_1/training.csv', 'r') as f:
-    with open('/home/yuzuki/2_2/result_use_dl_output/20230202_16:32:40/training.csv', 'r') as f:
+    with open('/home/yuzuki/my_proposed_method/result/gazebo/normal_change_dataset_model/a0.1_1.0-b_0.4/1.0/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/add_10/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_selected_training/20220817_21:20:01/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_rate_change/5000step40/training.csv', 'r') as f:

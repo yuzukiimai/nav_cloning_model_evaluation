@@ -153,116 +153,93 @@ class nav_cloning_node:
             img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
             img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
             img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-
             h, s, v = cv2.split(img_hsv)
             h_left, s_left, v_left = cv2.split(img_hsv_left)
             h_right, s_right, v_right = cv2.split(img_hsv_right)
-
-            mean = np.mean(v)
-            mean_left = np.mean(v_left)
-            mean_right = np.mean(v_right)
-
-            self.mean_training.append(mean)
-
-            mean_csv=[str(self.episode), mean]
-            with open(self.path + self.start_time + '/' + 'mean.csv', 'a') as f:
-                writer = csv.writer(f, lineterminator='\n')
-                writer.writerow(mean_csv)
-
+            # mean = np.mean(v)
+            # mean_left = np.mean(v_left)
+            # mean_right = np.mean(v_right)
+            # self.mean_training.append(mean)
+            # mean_csv=[str(self.episode), mean]
+            # with open(self.path + self.start_time + '/' + 'mean.csv', 'a') as f:
+            #     writer = csv.writer(f, lineterminator='\n')
+            #     writer.writerow(mean_csv)
             gamma = 0.5
             look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
             for i in range(256):
                 look_up_table[i][0] = (i/255)**(1.0/gamma)*255
-
             v_lut = cv2.LUT(v, look_up_table)
             v_lut_left = cv2.LUT(v_left, look_up_table)
             v_lut_right = cv2.LUT(v_right, look_up_table)
-
+            mean = np.mean(v_lut)
+            self.mean_training.append(mean)
+            mean_csv=[str(self.episode), mean]
+            with open(self.path + self.start_time + '/' + 'mean.csv', 'a') as f:
+                writer = csv.writer(f, lineterminator='\n')
+                writer.writerow(mean_csv)
             merge = cv2.merge([h, s, v_lut])
             merge_left = cv2.merge([h_left, s_left, v_lut_left])
             merge_right = cv2.merge([h_right, s_right, v_lut_right])
-
                 # print(np.mean(v_lut))   
             bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
             bgr_left = cv2.cvtColor(merge_left, cv2.COLOR_HSV2BGR)
             bgr_right = cv2.cvtColor(merge_right, cv2.COLOR_HSV2BGR)
-
             img = resize(bgr, (48, 64), mode='constant')
             img_left = resize(bgr_left, (48, 64), mode='constant')
             img_right = resize(bgr_right, (48, 64), mode='constant')
         
-
             if self.episode == 4000:
+                global mean_mean
                 mean_mean = sum(self.mean_training) / 4001
                 print(mean_mean)
-
-
 
         if self.episode > 4000:
             img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
             img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
             img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-
             h, s, v = cv2.split(img_hsv)
             h_left, s_left, v_left = cv2.split(img_hsv_left)
             h_right, s_right, v_right = cv2.split(img_hsv_right)
-            
             mean = np.mean(v)
             mean_left = np.mean(v_left)
             mean_right = np.mean(v_right)
-
 
             if  abs(mean - mean_mean) <= 10:
                 gamma = 1.0
                 look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
                 for i in range(256):
                     look_up_table[i][0] = (i/255)**(1.0/gamma)*255
-                    
-                if self.i < 10:
-                    self.i = self.i + 1
-                if self.i >= 10:
-                    self.i = 0
-
                 v_lut = cv2.LUT(v, look_up_table)
                 v_lut_left = cv2.LUT(v_left, look_up_table)
                 v_lut_right = cv2.LUT(v_right, look_up_table)
-                
                 merge = cv2.merge([h, s, v_lut])
                 merge_left = cv2.merge([h_left, s_left, v_lut_left])
                 merge_right = cv2.merge([h_right, s_right, v_lut_right])
-
                 # print(np.mean(v_lut))   
-                
                 bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
                 bgr_left = cv2.cvtColor(merge_left, cv2.COLOR_HSV2BGR)
                 bgr_right = cv2.cvtColor(merge_right, cv2.COLOR_HSV2BGR)
-                
                 img = resize(bgr, (48, 64), mode='constant')
                 img_left = resize(bgr_left, (48, 64), mode='constant')
                 img_right = resize(bgr_right, (48, 64), mode='constant')
 
 
-
-
-            if  abs(mean - mean_mean) < 10 and mean < 50:
+            if  abs(mean - mean_mean) > 10 and mean < 50:
                 x = self.numbers_1[self.i]
                 gamma = x
                 look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
                 for i in range(256):
                     look_up_table[i][0] = (i/255)**(1.0/gamma)*255
-                    
                 if self.i < 10:
                     self.i = self.i + 1
                 if self.i >= 10:
                     self.i = 0
-
                 v_lut = cv2.LUT(v, look_up_table)
                 v_lut_left = cv2.LUT(v_left, look_up_table)
                 v_lut_right = cv2.LUT(v_right, look_up_table)
                 merge = cv2.merge([h, s, v_lut])
                 merge_left = cv2.merge([h_left, s_left, v_lut_left])
                 merge_right = cv2.merge([h_right, s_right, v_lut_right])
-
                 # print(np.mean(v_lut))   
                 bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
                 bgr_left = cv2.cvtColor(merge_left, cv2.COLOR_HSV2BGR)
@@ -270,7 +247,6 @@ class nav_cloning_node:
                 img = resize(bgr, (48, 64), mode='constant')
                 img_left = resize(bgr_left, (48, 64), mode='constant')
                 img_right = resize(bgr_right, (48, 64), mode='constant')
-
 
 
             if  abs(mean - mean_mean) > 10 and mean > 50 :
@@ -296,6 +272,30 @@ class nav_cloning_node:
                 bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
                 bgr_left = cv2.cvtColor(merge_left, cv2.COLOR_HSV2BGR)
                 bgr_right = cv2.cvtColor(merge_right, cv2.COLOR_HSV2BGR)
+                img = resize(bgr, (48, 64), mode='constant')
+                img_left = resize(bgr_left, (48, 64), mode='constant')
+                img_right = resize(bgr_right, (48, 64), mode='constant')
+            
+            else :
+                gamma = 1.0
+                look_up_table = np.zeros((256, 1) ,dtype=np.uint8)
+                for i in range(256):
+                    look_up_table[i][0] = (i/255)**(1.0/gamma)*255
+
+                v_lut = cv2.LUT(v, look_up_table)
+                v_lut_left = cv2.LUT(v_left, look_up_table)
+                v_lut_right = cv2.LUT(v_right, look_up_table)
+                
+                merge = cv2.merge([h, s, v_lut])
+                merge_left = cv2.merge([h_left, s_left, v_lut_left])
+                merge_right = cv2.merge([h_right, s_right, v_lut_right])
+
+                # print(np.mean(v_lut))   
+                
+                bgr = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR)
+                bgr_left = cv2.cvtColor(merge_left, cv2.COLOR_HSV2BGR)
+                bgr_right = cv2.cvtColor(merge_right, cv2.COLOR_HSV2BGR)
+                
                 img = resize(bgr, (48, 64), mode='constant')
                 img_left = resize(bgr_left, (48, 64), mode='constant')
                 img_right = resize(bgr_right, (48, 64), mode='constant')

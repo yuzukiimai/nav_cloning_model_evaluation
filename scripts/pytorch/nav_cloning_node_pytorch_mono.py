@@ -27,12 +27,12 @@ import sys
 import tf
 from nav_msgs.msg import Odometry
 import random
-
+from PIL import Image
 
 class nav_cloning_node:
     def __init__(self):
         rospy.init_node('nav_cloning_node', anonymous=True)
-        self.mode = rospy.get_param("/nav_cloning_node/mode", "change_dataset_balance")
+        self.mode = rospy.get_param("/nav_cloning_node/mode", "use_dl_output")
         self.action_num = 1
         self.dl = deep_learning(n_action = self.action_num)
         self.bridge = CvBridge()
@@ -65,6 +65,7 @@ class nav_cloning_node:
         self.pos_the = 0.0
         self.is_started = False
         self.start_time_s = rospy.get_time()
+        self.numbers = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
         os.makedirs(self.path + self.start_time)
 
         # with open(self.path + self.start_time + '/' +  'training.csv', 'w') as f:
@@ -145,17 +146,21 @@ class nav_cloning_node:
         if self.is_started == False:
             return
 
-        r, g, b = cv2.split(self.cv_image)
-        imgGray = np.asanyarray([ 0.2989 * r, 0.5870 * g, 0.1140 * b])
-        img = resize(imgGray, (48, 64), mode='constant')
+        with Image.open(self.cv_image) as pil_img:
+            gray = pil_img.convert("L").convert("RGB")
+            array = np.asarray(gray, np.uint8)
+        img = resize(array, (48, 64), mode='constant')
 
-        r, g, b = cv2.split(self.cv_left_image)
-        imgGray_left = np.asanyarray([ 0.2989 * r, 0.5870 * g, 0.1140 * b])
-        img_left = resize(imgGray_left, (48, 64), mode='constant')
-            
-        r, g, b = cv2.split(self.cv_right_image)
-        imgGray_right = np.asanyarray([ 0.2989 * r, 0.5870 * g, 0.1140 * b])
-        img_right = resize(imgGray_right, (48, 64), mode='constant')
+        with Image.open(self.cv_left_image) as pil_left_img:
+            gray_left = pil_left_img.convert("L").convert("RGB")
+            array_left = np.asarray(gray_left, np.uint8)
+        img_left = resize(array_left, (48, 64), mode='constant')
+
+        with Image.open(self.cv_right_image) as pil_right_img:
+            gray_right = pil_right_img.convert("L").convert("RGB")
+            array_right = np.asarray(gray_right, np.uint8)
+        img_right = resize(array_right, (48, 64), mode='constant')
+
         
 
 
@@ -168,7 +173,7 @@ class nav_cloning_node:
             self.dl.save(self.save_path)
             # self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_use_dl_output/20230103_02:03:00/model_gpu.pt")
 
-        if self.episode == 5700:
+        if self.episode == 6000:
             os.system('killall roslaunch')
             sys.exit()
 
@@ -320,13 +325,11 @@ class nav_cloning_node:
             self.vel.angular.z = target_action
             self.nav_pub.publish(self.vel)
 
-        temp = copy.deepcopy(imgGray)
+        temp = copy.deepcopy(gray)
         cv2.imshow("HSV Center Image", temp)
-        # temp = copy.deepcopy(img)
-        # cv2.imshow("HSV Center Resized Image", temp)
-        temp = copy.deepcopy(imgGray_left)
+        temp = copy.deepcopy(gray_left)
         cv2.imshow("HSV Left Image", temp)
-        temp = copy.deepcopy(imgGray_right)
+        temp = copy.deepcopy(gray_right)
         cv2.imshow("HSV Right Image", temp)
         cv2.imshow("/camera/rgb/image_raw", self.cv_image)
         cv2.waitKey(1)

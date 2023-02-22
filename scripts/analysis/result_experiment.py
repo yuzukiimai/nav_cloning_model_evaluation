@@ -9,7 +9,7 @@ from matplotlib import pyplot
 from matplotlib.patches import Circle, Polygon
 import numpy as np
 from PIL import Image
-
+import glob
 
 def draw_training_pos():
     rospy.init_node('draw_training_pos_node', anonymous=True)
@@ -21,27 +21,23 @@ def draw_training_pos():
     vel = 0.2
     arrow_dict = dict(arrowstyle = "->", color = "black")
     count = 0
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_10/training.csv', 'r') as f:
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_2000step_1/training.csv', 'r') as f:
-    with open('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_extreme/20230221_08:05:48/training.csv', 'r') as f:
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/add_10/training.csv', 'r') as f:
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_selected_training/20220817_21:20:01/training.csv', 'r') as f:
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_rate_change/5000step40/training.csv', 'r') as f:
-        for row in csv.reader(f):
-                # str_step, mode,loss, angle_error,distance,str_x, str_y, str_the = row
-                str_step, mode,distance,str_x, str_y, str_the = row
-                # str_step, mode,distance,str_x, str_y = row
-                # str_step, mode,distance,str_x, str_y, str_the,learning_count = row
-                # step, x, y = int(str_step), float(str_x), float(str_y)
-                # patch = Circle(xy=(x, y), radius=0.08, facecolor="gray") 
-                # ax.add_patch(patch)
-                # else:
-                if mode == "test":
-                    x, y = float(str_x), float(str_y)
-                    patch = Circle(xy=(x, y), radius=0.08, facecolor="red") 
-                    ax.add_patch(patch)
-        else:
-                    pass
+    for filename in glob.glob('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/*/'):
+        with open(filename + 'training.csv', 'r') as f:
+            for row in csv.reader(f):
+                    # str_step, mode,loss, angle_error,distance,str_x, str_y, str_the = row
+                    str_step, mode,distance,str_x, str_y, str_the = row
+                    # str_step, mode,distance,str_x, str_y = row
+                    # str_step, mode,distance,str_x, str_y, str_the,learning_count = row
+                    # step, x, y = int(str_step), float(str_x), float(str_y)
+                    # patch = Circle(xy=(x, y), radius=0.08, facecolor="gray") 
+                    # ax.add_patch(patch)
+                    # else:
+                    if mode == "test":
+                        x, y = float(str_x), float(str_y)
+                        patch = Circle(xy=(x, y), radius=0.08, facecolor="red") 
+                        ax.add_patch(patch)
+            else:
+                        pass
         # else:
         #     pass
 

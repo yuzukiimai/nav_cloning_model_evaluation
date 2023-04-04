@@ -20,7 +20,7 @@ for filename in sorted(glob.glob('/home/yuzuki/catkin_ws/src/nav_cloning/data/re
 def draw_training_pos():
     index = 0
     file_number = 1
-    while index < 51:
+    while index < 50:
         # rospy.init_node('draw_training_pos_node', anonymous=True)
         image = Image.open(('/home/yuzuki/catkin_ws/src/nav_cloning')+'/maps/map.png').convert("L")
         arr = np.asarray(image)

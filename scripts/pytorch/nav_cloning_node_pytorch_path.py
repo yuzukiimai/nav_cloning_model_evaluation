@@ -30,7 +30,7 @@ from nav_msgs.msg import Odometry
 class nav_cloning_node:
     def __init__(self):
         rospy.init_node('nav_cloning_node', anonymous=True)
-        self.mode = rospy.get_param("/nav_cloning_node/mode", "mix")
+        self.mode = rospy.get_param("/nav_cloning_node/mode", "change_dataset_balance")
         self.action_num = 1
         self.dl = deep_learning(n_action = self.action_num)
         self.bridge = CvBridge()
@@ -139,10 +139,20 @@ class nav_cloning_node:
             self.is_started = True
         if self.is_started == False:
             return
-        img = resize(self.cv_image, (48, 64), mode='constant')
         
-        # r, g, b = cv2.split(img)
-        # img = np.asanyarray([r,g,b])
+        # if self.episode >= 4000:
+        #     img = resize(self.cv_image, (48, 64), mode='constant')
+
+        if self.action < 0.2:
+            img2 = cv2.arrowedLine(self.cv_image, (320, 400), (320, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+            img = resize(img2, (48, 64), mode='constant')
+        if self.action >= 0.2:
+            img2 = cv2.arrowedLine(self.cv_image, (320, 400), (120, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+            img = resize(img2, (48, 64), mode='constant')
+        # else:
+        #     img = resize(self.cv_image, (48, 64), mode='constant')
+        
+        
 
         img_left = resize(self.cv_left_image, (48, 64), mode='constant')
         #r, g, b = cv2.split(img_left)
@@ -153,20 +163,62 @@ class nav_cloning_node:
         #img_right = np.asanyarray([r,g,b])
         ros_time = str(rospy.Time.now())
 
-        if self.episode == 10000:
+        if self.episode == 0:
             self.learning = False
             self.dl.save(self.save_path)
-            #self.dl.load(self.load_path)
+            self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_change_dataset_balance/20230227_19:45:01/model_gpu.pt")
 
-        if self.episode == 12500:
+        if self.episode == 5700:
             os.system('killall roslaunch')
             sys.exit()
 
         if self.learning:
             target_action = self.action
             distance = self.min_distance
-            
-            if self.mode == "mix":
+
+            if self.mode == "manual":
+                if distance > 0.1:
+                    self.select_dl = False
+                elif distance < 0.05:
+                    self.select_dl = True
+                if self.select_dl and self.episode >= 0:
+                    target_action = 0
+                action, loss = self.dl.act_and_trains(img , target_action)
+                if abs(target_action) < 0.1:
+                    action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                    action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
+                angle_error = abs(action - target_action)
+
+            elif self.mode == "zigzag":
+                action, loss = self.dl.act_and_trains(img , target_action)
+                if abs(target_action) < 0.1:
+                    action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                    action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
+                angle_error = abs(action - target_action)
+                if distance > 0.1:
+                    self.select_dl = False
+                elif distance < 0.05:
+                    self.select_dl = True
+                if self.select_dl and self.episode >= 0:
+                    target_action = 0
+
+            elif self.mode == "use_dl_output":
+                action, loss = self.dl.act_and_trains(img , target_action)
+                if abs(target_action) < 0.1:
+                    action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                    action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
+                angle_error = abs(action - target_action)
+                if distance > 0.1:
+                    self.select_dl = False
+                elif distance < 0.05:
+                    self.select_dl = True
+                if self.select_dl and self.episode >= 0:
+                    target_action = action
+
+
+
+
+            elif self.mode == "change_dataset_balance":
                 if distance < 0.05:
                     action, loss = self.dl.act_and_trains(img , target_action)
                     if abs(target_action) < 0.1:
@@ -212,25 +264,31 @@ class nav_cloning_node:
                 if self.select_dl and self.episode >= 0:
                     target_action = action
 
-            
-                if self.episode >= 6000:
-                    action = self.dl.act(img )
-                    angle_error = abs(action - target_action)
-                    loss = 0
-                    if angle_error > 0.05:
-                        action, loss = self.dl.act_and_trains(img , target_action)
-                        if abs(target_action) < 0.1:
-                            action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
-                            action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
+            elif self.mode == "follow_line":
+                action, loss = self.dl.act_and_trains(img , target_action)
+                if abs(target_action) < 0.1:
+                    action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                    action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
+                angle_error = abs(action - target_action)
+
+            elif self.mode == "selected_training":
+                action = self.dl.act(img )
+                angle_error = abs(action - target_action)
+                loss = 0
+                if angle_error > 0.05:
+                    action, loss = self.dl.act_and_trains(img , target_action)
+                    if abs(target_action) < 0.1:
+                        action_left,  loss_left  = self.dl.act_and_trains(img_left , target_action - 0.2)
+                        action_right, loss_right = self.dl.act_and_trains(img_right , target_action + 0.2)
                 
-                    if distance > 0.15 or angle_error > 0.3:
-                        self.select_dl = False
-                    # if distance > 0.1:
-                    #     self.select_dl = False
-                    elif distance < 0.05:
-                        self.select_dl = True
-                    if self.select_dl and self.episode >= 0:
-                        target_action = action
+                if distance > 0.15 or angle_error > 0.3:
+                    self.select_dl = False
+                # if distance > 0.1:
+                #     self.select_dl = False
+                elif distance < 0.05:
+                    self.select_dl = True
+                if self.select_dl and self.episode >= 0:
+                    target_action = action
 
             # end mode
 

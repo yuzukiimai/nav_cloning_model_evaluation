@@ -26,12 +26,11 @@ import copy
 import sys
 import tf
 from nav_msgs.msg import Odometry
-import random
 
 class nav_cloning_node:
     def __init__(self):
         rospy.init_node('nav_cloning_node', anonymous=True)
-        self.mode = rospy.get_param("/nav_cloning_node/mode", "use_dl_output")
+        self.mode = rospy.get_param("/nav_cloning_node/mode", "change_dataset_balance")
         self.action_num = 1
         self.dl = deep_learning(n_action = self.action_num)
         self.bridge = CvBridge()
@@ -64,15 +63,14 @@ class nav_cloning_node:
         self.pos_the = 0.0
         self.is_started = False
         self.start_time_s = rospy.get_time()
-        self.numbers = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
         os.makedirs(self.path + self.start_time)
+        self.target_action_lists = []
 
         # with open(self.path + self.start_time + '/' +  'training.csv', 'w') as f:
         #     writer = csv.writer(f, lineterminator='\n')
         #     writer.writerow(['step', 'mode', 'loss', 'angle_error(rad)', 'distance(m)','x(m)','y(m)', 'the(rad)', 'direction'])
         self.tracker_sub = rospy.Subscriber("/tracker", Odometry, self.callback_tracker)
 
-   
     def callback(self, data):
         try:
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -90,8 +88,6 @@ class nav_cloning_node:
             self.cv_right_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
-
-
 
     def callback_tracker(self, data):
         self.pos_x = data.pose.pose.position.x
@@ -144,150 +140,37 @@ class nav_cloning_node:
             self.is_started = True
         if self.is_started == False:
             return
-
-        # img = resize(self.cv_image, (48, 64), mode='constant')
-
-
-
-
-#---------------------------------------------------------------------------------------
-        if self.episode < 0:
         
-
-            x = round(random.uniform(0.5, 1.2), 1)
-            print(x)
-#---------------------------------------------------------------------------------------        
-            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-            h_deg = 0 #色相(Hue)の回転度数
-            s_mag = 1 # 彩度(Saturation)の倍率
-            v_mag = x # 明度(Value)の倍率
- 
-            img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
-            img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
-            img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
-
-            bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img = resize(bgr, (48, 64), mode='constant')
-            # print(bgr)
-#-----------------------------------------------------------------------------------------
-
-            # r, g, b = cv2.split(img)
-            # img = np.asanyarray([r,g,b])
-
-#-----------------------------------------------------------------------------------------
-            img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-            h_deg_left = 0 #色相(Hue)の回転度数
-            s_mag_left = 1 # 彩度(Saturation)の倍率
-            v_mag_left = x # 明度(Value)の倍率
- 
-            img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
-            img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
-            img_hsv_left[:,:,(2)] = img_hsv_left[:,:,(2)]*v_mag_left # 明度の計算
-        
-            bgr_left = cv2.cvtColor(img_hsv_left,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img_left = resize(bgr_left, (48, 64), mode='constant')
-            #print(bgr_left)
-#------------------------------------------------------------------------------------------     
-
-            #r, g, b = cv2.split(img_left)
-            #img_left = np.asanyarray([r,g,b])
-
-#------------------------------------------------------------------------------------------
-            img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-            h_deg_right = 0 #色相(Hue)の回転度数
-            s_mag_right = 1 # 彩度(Saturation)の倍率
-            v_mag_right = x # 明度(Value)の倍率
- 
-            img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
-            img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
-            img_hsv_right[:,:,(2)] = img_hsv_right[:,:,(2)]*v_mag_right # 明度の計算
-        
-            bgr_right = cv2.cvtColor(img_hsv_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img_right = resize(bgr_right, (48, 64), mode='constant')
-            #print(bgr_right)
-#-------------------------------------------------------------------------------------------
-
-            #r, g, b = cv2.split(img_right)
-            #img_right = np.asanyarray([r,g,b])
-
-
-
-
-
-
-        if self.episode >= 0:
-            img_hsv = cv2.cvtColor(self.cv_image, cv2.COLOR_BGR2HSV)
-            h_deg = 0 #色相(Hue)の回転度数
-            s_mag = 1 # 彩度(Saturation)の倍率
-            v_mag = 1.2 # 明度(Value)の倍率
- 
-            img_hsv[:,:,(0)] = img_hsv[:,:,(0)]+h_deg # 色相の計算
-            img_hsv[:,:,(1)] = img_hsv[:,:,(1)]*s_mag # 彩度の計算
-            img_hsv[:,:,(2)] = img_hsv[:,:,(2)]*v_mag # 明度の計算
-
-            bgr = cv2.cvtColor(img_hsv,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img = resize(bgr, (48, 64), mode='constant')
-            # print(bgr)
-#-----------------------------------------------------------------------------------------
-
-            # r, g, b = cv2.split(img)
-            # img = np.asanyarray([r,g,b])
-
-#-----------------------------------------------------------------------------------------
-            img_hsv_left = cv2.cvtColor(self.cv_left_image, cv2.COLOR_BGR2HSV)
-            h_deg_left = 0 #色相(Hue)の回転度数
-            s_mag_left = 1 # 彩度(Saturation)の倍率
-            v_mag_left = 1.2 # 明度(Value)の倍率
- 
-            img_hsv_left[:,:,(0)] = img_hsv_left[:,:,(0)]+h_deg_left # 色相の計算
-            img_hsv_left[:,:,(1)] = img_hsv_left[:,:,(1)]*s_mag_left # 彩度の計算
-            img_hsv_left[:,:,(2)] = img_hsv_left[:,:,(2)]*v_mag_left # 明度の計算
-        
-            bgr_left = cv2.cvtColor(img_hsv_left,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img_left = resize(bgr_left, (48, 64), mode='constant')
-            #print(bgr_left)
-#------------------------------------------------------------------------------------------     
-
-            #r, g, b = cv2.split(img_left)
-            #img_left = np.asanyarray([r,g,b])
-
-#------------------------------------------------------------------------------------------
-            img_hsv_right = cv2.cvtColor(self.cv_right_image, cv2.COLOR_BGR2HSV)
-            h_deg_right = 0 #色相(Hue)の回転度数
-            s_mag_right = 1 # 彩度(Saturation)の倍率
-            v_mag_right = 1.2 # 明度(Value)の倍率
- 
-            img_hsv_right[:,:,(0)] = img_hsv_right[:,:,(0)]+h_deg_right # 色相の計算
-            img_hsv_right[:,:,(1)] = img_hsv_right[:,:,(1)]*s_mag_right # 彩度の計算
-            img_hsv_right[:,:,(2)] = img_hsv_right[:,:,(2)]*v_mag_right # 明度の計算
-        
-            bgr_right = cv2.cvtColor(img_hsv_right,cv2.COLOR_HSV2BGR) # 色空間をHSVからBGRに変換
-            img_right = resize(bgr_right, (48, 64), mode='constant')
-            #print(bgr_right)
-#-------------------------------------------------------------------------------------------
-
-            #r, g, b = cv2.split(img_right)
-            #img_right = np.asanyarray([r,g,b])
-
-
-#--------------------------------------------------------------------------------------------
-
-
-
         ros_time = str(rospy.Time.now())
+        # img = resize(self.cv_image, (48, 64), mode='constant')
 
         if self.episode == 0:
             self.learning = False
-            # self.dl.save(self.save_path)
-            self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_use_dl_output/20230103_02:48:48/model_gpu.pt")
+            self.dl.save(self.save_path)
+            self.dl.load("/home/yuzuki/catkin_ws/src/nav_cloning/data/model_change_dataset_balance/20230301_02:01:55/model_gpu.pt")
 
-        if self.episode == 6000:
+        if self.episode == 5700:
             os.system('killall roslaunch')
             sys.exit()
 
         if self.learning:
             target_action = self.action
             distance = self.min_distance
+
+            # if -0.2 <= self.action < 0.2:
+            #     img2 = cv2.arrowedLine(self.cv_image, (320, 300), (320, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+            #     img = resize(img2, (48, 64), mode='constant')
+            if self.action > 0.2:
+                img2 = cv2.arrowedLine(self.cv_image, (320, 300), (120, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+                img = resize(img2, (48, 64), mode='constant')
+            # elif self.action < -0.2:
+            #     img2 = cv2.arrowedLine(self.cv_image, (320, 300), (520, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+            #     img = resize(img2, (48, 64), mode='constant')
+            else:
+                img = resize(self.cv_image, (48, 64), mode='constant')
+        
+            img_left = resize(self.cv_left_image, (48, 64), mode='constant')
+            img_right = resize(self.cv_right_image, (48, 64), mode='constant')
 
             if self.mode == "manual":
                 if distance > 0.1:
@@ -418,28 +301,62 @@ class nav_cloning_node:
             self.nav_pub.publish(self.vel)
 
         else:
-            target_action = self.dl.act(img)
+            global index
+
+            if self.episode == 0:
+                index=0
+                img = resize(self.cv_image, (48, 64), mode='constant')
+                target_action = self.dl.act(img)
+                # self.vel.angular.z = target_action
+                # self.target_action_lists.append(self.vel.angular.z)
+            else:
+                target_action = self.target_action_lists[index]
+                index += 1
+
             distance = self.min_distance
             print(str(self.episode) + ", test, angular:" + str(target_action) + ", distance: " + str(distance))
 
             self.episode += 1
             angle_error = abs(self.action - target_action)
-            # line = [str(self.episode), "test", "0", str(angle_error), str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
             line = [str(self.episode), "test", str(distance), str(self.pos_x), str(self.pos_y), str(self.pos_the)  ]
             with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                 writer = csv.writer(f, lineterminator='\n')
                 writer.writerow(line)
-            self.vel.linear.x = 0.2
+
             self.vel.angular.z = target_action
+            
+
+            # if -0.09 <= self.vel.angular.z <= 0.09:
+            #     img2 = cv2.arrowedLine(self.cv_image, (320, 300), (320, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+            #     img = resize(img2, (48, 64), mode='constant')
+            if self.vel.angular.z > 0.05:
+                img2 = cv2.arrowedLine(self.cv_image, (320, 300), (120, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+                img = resize(img2, (48, 64), mode='constant')
+                
+            # elif self.vel.angular.z < -0.09:
+            #     img2 = cv2.arrowedLine(self.cv_image, (320, 300), (520, 200), (255, 255, 0), thickness=5, tipLength=0.5)
+            #     img = resize(img2, (48, 64), mode='constant')
+            else:
+                img = resize(self.cv_image, (48, 64), mode='constant')
+            
+            target_action = self.dl.act(img)
+            self.vel.angular.z = target_action
+            self.vel.linear.x = 0.2
             self.nav_pub.publish(self.vel)
 
-        temp = copy.deepcopy(bgr)
-        cv2.imshow("HSV Center Image", temp)
-        temp = copy.deepcopy(bgr_left)
-        cv2.imshow("HSV Left Image", temp)
-        temp = copy.deepcopy(bgr_right)
-        cv2.imshow("HSV Right Image", temp)
-        cv2.imshow("/camera/rgb/image_raw", self.cv_image)
+            self.target_action_lists.append(self.vel.angular.z)
+            
+            
+        
+        
+        temp = copy.deepcopy(img)
+        cv2.imshow("Resized Image", temp)
+        # temp = copy.deepcopy(img2)
+        # cv2.imshow("Image", temp)
+        # temp = copy.deepcopy(img_left)
+        # cv2.imshow("Resized Left Image", temp)
+        # temp = copy.deepcopy(img_right)
+        # cv2.imshow("Resized Right Image", temp)
         cv2.waitKey(1)
 
 if __name__ == '__main__':

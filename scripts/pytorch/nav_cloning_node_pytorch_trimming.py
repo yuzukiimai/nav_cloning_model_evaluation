@@ -140,13 +140,13 @@ class nav_cloning_node:
         if self.is_started == False:
             return
 
-        trim = self.cv_image[100 : 360, 160:480]
+        trim = self.cv_image[100 : 120, 0:640]
         img = resize(trim, (48, 64), mode='constant')
 
-        trim_left = self.cv_left_image[100 : 360, 160: 480]
+        trim_left = self.cv_left_image[100 : 120, 0:640]
         img_left = resize(trim_left, (48, 64), mode='constant')
 
-        trim_right = self.cv_right_image[100 : 360, 160: 480]
+        trim_right = self.cv_right_image[100 : 120, 0:640]
         img_right = resize(trim_right, (48, 64), mode='constant')
         
         # img2 = resize(self.cv_image, (48, 64), mode='constant')
@@ -314,8 +314,8 @@ class nav_cloning_node:
         temp = copy.deepcopy(trim)
         cv2.imshow("Resized Image", temp)
 
-        # temp = copy.deepcopy(img)
-        # cv2.imshow("Trimming Image", temp)
+        temp = copy.deepcopy(img)
+        cv2.imshow("Trimming Image", temp)
 
         # temp = copy.deepcopy(img2)
         # cv2.imshow("not trim resized Image", temp)

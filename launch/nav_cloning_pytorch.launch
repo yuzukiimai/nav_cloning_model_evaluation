@@ -4,7 +4,6 @@
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_edge.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_extreme2.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma_sharp.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_auto.py/"/> -->

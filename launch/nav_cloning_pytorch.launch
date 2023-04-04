@@ -8,7 +8,7 @@
   <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma_sharp.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_auto.py/"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_auto_kai.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_kuro.py"/> -->
+  <arg name="script" default="nav_cloning_node_pytorch_kuro.py"/>
   <!-- <arg name="script" default="nav_cloning_node_pytorch_trimming.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_path.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_path2.py"/> -->

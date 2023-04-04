@@ -140,13 +140,13 @@ class nav_cloning_node:
         if self.is_started == False:
             return
 
-        kuro = cv2.rectangle(self.cv_image, (0, 0), (639, 100), (0, 0, 0), -1)
+        kuro = cv2.rectangle(self.cv_image, (0, 0), (639, 130), (0, 0, 0), -1)
         img = resize(kuro, (48, 64), mode='constant')
 
-        kuro_left = cv2.rectangle(self.cv_left_image, (0, 0), (639, 100), (0, 0, 0), -1)
+        kuro_left = cv2.rectangle(self.cv_left_image, (0, 0), (639, 130), (0, 0, 0), -1)
         img_left = resize(kuro_left, (48, 64), mode='constant')
 
-        kuro_right = cv2.rectangle(self.cv_right_image, (0, 0), (639, 100), (0, 0, 0), -1)
+        kuro_right = cv2.rectangle(self.cv_right_image, (0, 0), (639, 130), (0, 0, 0), -1)
         img_right = resize(kuro_right, (48, 64), mode='constant')
         
         
@@ -311,6 +311,8 @@ class nav_cloning_node:
 
         temp = copy.deepcopy(kuro)
         cv2.imshow("Resized Image", temp)
+        temp = copy.deepcopy(img)
+        cv2.imshow("real", temp)
         temp = copy.deepcopy(kuro_left)
         cv2.imshow("Resized Left Image", temp)
         temp = copy.deepcopy(kuro_right)

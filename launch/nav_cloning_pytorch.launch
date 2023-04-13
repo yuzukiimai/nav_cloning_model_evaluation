@@ -3,16 +3,9 @@
   <!-- <arg name="script" default="nav_cloning_node_pytorch_default.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_edge.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma_sharp.py"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_auto.py/"/> -->
   <!-- <arg name="script" default="nav_cloning_node_pytorch_auto_kai.py"/> -->
-  <arg name="script" default="nav_cloning_node_pytorch_kuro.py"/>
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_trimming.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_path.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_path2.py"/> -->
-
 
   <!-- <arg name="mode" default="use_dl_output"/> -->
   <arg name="mode" default="change_dataset_balance"/>
@@ -36,7 +29,6 @@
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_waffle_pi.urdf.xacro" />
 
   <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model mobile_base -x $(arg robot_x) -y $(arg robot_y) -z 0.0 -Y $(arg robot_Y) -param robot_description" />
-  <!-- <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model mobile_base -x 0.0 -y 0.0 -z 0.0 -param robot_description" /> -->
 
   <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
         args="5 nav_cloning nav_cloning.launch script:=$(arg script)"

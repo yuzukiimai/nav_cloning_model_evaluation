@@ -14,8 +14,9 @@ import os
 
 lists = []
 
-for filename in sorted(glob.glob('/home/yuzuki/test1_ws/src/nav_cloning/data/result_change_dataset_balance/*/training.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
+for filename in sorted(glob.glob('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/*/training.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
 # for filename in sorted(glob.glob('/home/yuzuki/test1_ws/src/nav_cloning/data/result_use_dl_output/*/training.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
+# for filename in sorted(glob.glob('/home/yuzuki/research/result_gray_0510/*/training.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
     lists.append(filename)
 
 def draw_training_pos():

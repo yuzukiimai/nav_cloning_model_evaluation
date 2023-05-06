@@ -150,11 +150,6 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_executable(initpose src/initpose.cpp)
-target_link_libraries(
-    initpose
-    ${catkin_LIBRARIES}
-)
 
 #############
 ## Install ##

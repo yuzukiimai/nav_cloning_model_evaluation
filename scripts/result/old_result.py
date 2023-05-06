@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import print_function
-import roslib
-roslib.load_manifest('nav_cloning')
-import rospy
+# import roslib
+# roslib.load_manifest('nav_cloning')
+# import rospy
 import csv
 import math
 from matplotlib import pyplot
@@ -12,8 +12,9 @@ from PIL import Image
 
 
 def draw_training_pos():
-    rospy.init_node('draw_training_pos_node', anonymous=True)
-    image = Image.open(roslib.packages.get_pkg_dir('nav_cloning')+'/maps/map.png').convert("L")
+    # rospy.init_node('draw_training_pos_node', anonymous=True)
+    # image = Image.open(roslib.packages.get_pkg_dir('nav_cloning')+'/maps/map.png').convert("L")
+    image = Image.open(('/home/yuzuki/catkin_ws/src/nav_cloning')+'/maps/map.png').convert("L")
     arr = np.asarray(image)
     fig = pyplot.figure()
     ax = fig.add_subplot(111)
@@ -23,10 +24,8 @@ def draw_training_pos():
     count = 0
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_10/training.csv', 'r') as f:
     # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_use_dl_output/rate_change_2000step_1/training.csv', 'r') as f:
-    with open('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/20230222_02:40:05/training.csv', 'r') as f:
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/add_10/training.csv', 'r') as f:
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_selected_training/20220817_21:20:01/training.csv', 'r') as f:
-    # with open('/home/kiyooka/catkin_ws/src/nav_cloning/data/result_rate_change/5000step40/training.csv', 'r') as f:
+    with open('/home/yuzuki/research/result_gray_0510_2/1.0/training.csv', 'r') as f:
+    
         for row in csv.reader(f):
                 # str_step, mode,loss, angle_error,distance,str_x, str_y, str_the = row
                 str_step, mode,distance,str_x, str_y, str_the = row
@@ -61,6 +60,7 @@ def draw_training_pos():
             
     ax.set_xlim([-5, 30])
     ax.set_ylim([-5, 15])
+    # pyplot.savefig("/home/yuzuki/research/result_gray_0510_2/png/1.0.png") 
     pyplot.show()
 
 if __name__ == '__main__':

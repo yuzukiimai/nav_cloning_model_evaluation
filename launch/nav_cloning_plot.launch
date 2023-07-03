@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="script" default="nav_cloning_node_pytorch_plot1_willow.py"/>
-  <arg name="script2" default="nav_cloning_node_pytorch_plot2_willow.py"/>
+  <arg name="script" default="nav_cloning_node_pytorch_plot1_willow_50.py"/>
+  <arg name="script2" default="nav_cloning_node_pytorch_plot2_willow_50.py"/>
 
 
   <!-- <arg name="mode" default="use_dl_output"/> -->
@@ -52,7 +52,7 @@
         name="timed_roslaunch" output="screen" />
 
   <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
-        args="7 nav_cloning nav_cloning2.launch script2:=$(arg script2)"
+        args="30 nav_cloning nav_cloning2.launch script2:=$(arg script2)"
         name="timed_roslaunch2" output="screen" />
 
   <!-- <node pkg="timed_roslaunch" type="timed_roslaunch.sh"

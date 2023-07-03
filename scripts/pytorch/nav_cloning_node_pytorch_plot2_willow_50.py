@@ -27,6 +27,7 @@ class nav_cloning_node2:
         self.mode_sub = rospy.Subscriber("/mode", Bool, self.callback_mode)
         self.mode = str()
         self.trigger = False
+        self.exit_count = 0
 
         self.fig = plt.figure()
         self.ax = self.fig.add_subplot(111)
@@ -59,27 +60,30 @@ class nav_cloning_node2:
     def update(self, frame):
         self.ax.clear()
         self.ax.set_xlim([-5, 30])
-        self.ax.set_ylim([-5, 15])
+        self.ax.set_ylim([-5, 15])        
+        self.ax.text(13, -4.8, "Total: " + str(self.num), color="b", fontsize="xx-large")
+        self.ax.text(-4.2, -4.8, "Number of laps: " + str(self.i), color="r", fontsize="xx-large")
+        self.map_plot = self.ax.imshow(self.arr, cmap='gray', extent=[-10,50,-10,50])
 
-        if self.laps and self.mode == False:
-            self.trigger = True
-        
         if self.trigger:
             self.ax.text(24, -4.8, "Test", color="c", fontsize="xx-large")
         
         else:
             self.ax.text(24, -4.8, "Train", color="m", fontsize="xx-large")
-        
-        self.ax.text(13, -4.8, "Total: " + str(self.num), color="b", fontsize="xx-large")
-        self.ax.text(-4.2, -4.8, "Number of laps: " + str(self.i), color="r", fontsize="xx-large")
-        self.map_plot = self.ax.imshow(self.arr, cmap='gray', extent=[-10,50,-10,50])
+            
 
         with open(self.dir + '/' + 'training.csv', 'r') as f:
             for row in csv.reader(f):
                 str_step, mode, distance, str_x, str_y, str_the = row
                 x, y = float(str_x), float(str_y)
-                self.patches.append(Circle(xy=(x, y), radius=0.10, facecolor="b"))
-                self.num += 1
+                if self.trigger:
+                    self.patches.append(Circle(xy=(x, y), radius=0.10, facecolor="b"))
+                    self.num += 1
+                elif mode == "test":
+                    pass
+                else:
+                    self.patches.append(Circle(xy=(x, y), radius=0.10, facecolor="b"))
+                    self.num += 1
                 
         
         with open(self.dir + '/' + 'training.csv', 'w') as f:
@@ -89,7 +93,8 @@ class nav_cloning_node2:
             self.ax.add_patch(patch)
             
 
-        if self.num > 800:
+        if self.exit_count == 0 and self.num > 800:
+            self.exit_count = 1
             self.exit_flg = True
             self.exit_pub.publish(self.exit_flg)
 
@@ -100,15 +105,15 @@ class nav_cloning_node2:
             self.i += 1
             self.num = 0
             self.patches.clear()
+            if self.mode == False:
+                self.trigger = True
             
-            
-
+        
        
 
     def animate(self):
         animation = FuncAnimation(self.fig, self.update, frames=10, interval=3000)
         plt.show()
-
 
 if __name__ == '__main__':
     l = nav_cloning_node2()

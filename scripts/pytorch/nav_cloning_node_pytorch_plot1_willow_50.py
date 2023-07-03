@@ -164,7 +164,7 @@ class nav_cloning_node:
 
         if self.kill_flg:
             self.kill_count += 1
-            if self.kill_count == 1700:
+            if self.kill_count == 2500:
                 os.system('killall roslaunch')
                 sys.exit()
 
@@ -269,7 +269,7 @@ class nav_cloning_node:
                 writer.writerow(lines)
 
             self.vel.linear.x = 0.2
-            if angle_error < 0.05:
+            if angle_error < 0.02:
                 with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                     writer = csv.writer(f, lineterminator='\n')
                     writer.writerow(lines)
@@ -295,7 +295,7 @@ class nav_cloning_node:
             with open(self.path + self.start_time + '/' + 'training_all.csv', 'a') as f:
                 writer = csv.writer(f, lineterminator='\n')
                 writer.writerow(lines)
-            if angle_error < 0.05:
+            if angle_error < 0.02:
                 with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                     writer = csv.writer(f, lineterminator='\n')
                     writer.writerow(lines)

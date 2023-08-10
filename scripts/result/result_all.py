@@ -75,7 +75,7 @@ def draw_training_pos_tsudanuma():
     vel = 0.2
     arrow_dict = dict(arrowstyle = "->", color = "black")
     count = 0
-    for filename in glob.glob('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_change_dataset_balances/*/'):
+    for filename in glob.glob('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/*/'):
         with open(filename + 'training_all.csv', 'r') as f:
             for row in csv.reader(f):
                     str_step, mode,distance,str_x, str_y, str_the = row
@@ -94,8 +94,8 @@ def draw_training_pos_tsudanuma():
 
 
 if __name__ == '__main__':
-    draw_training_pos_willow()
+    # draw_training_pos_willow()
     # draw_training_pos_tsudanuma_real()
-    # draw_training_pos_tsudanuma()
+    draw_training_pos_tsudanuma()
 
 

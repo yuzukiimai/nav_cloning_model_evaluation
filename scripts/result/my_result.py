@@ -120,8 +120,8 @@ def draw_training_pos_tsudanuma():
 
 
 if __name__ == '__main__':
-    draw_training_pos_willow()
+    # draw_training_pos_willow()
     # draw_training_pos_tsudanuma_real()
-    # draw_training_pos_tsudanuma()
+    draw_training_pos_tsudanuma()
 
 

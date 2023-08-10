@@ -93,7 +93,7 @@ class nav_cloning_node2:
             self.ax.add_patch(patch)
             
 
-        if self.exit_count == 0 and self.num > 800:
+        if self.exit_count == 0 and self.num > 1200:
             self.exit_count = 1
             self.exit_flg = True
             self.exit_pub.publish(self.exit_flg)

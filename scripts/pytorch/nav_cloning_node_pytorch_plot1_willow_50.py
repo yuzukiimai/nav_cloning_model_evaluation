@@ -164,11 +164,11 @@ class nav_cloning_node:
 
         if self.kill_flg:
             self.kill_count += 1
-            if self.kill_count == 2500:
+            if self.kill_count == 2000:
                 os.system('killall roslaunch')
                 sys.exit()
 
-        if self.episode == 8000:
+        if self.episode == 20000:
             self.learning = False
             self.dl.save(self.save_path)
             # self.dl.load("/home/yuzuki//model_gpu.pt")
@@ -177,7 +177,7 @@ class nav_cloning_node:
         self.mode_pub.publish(mode)
 
 
-        if self.episode == 10000:
+        if self.episode == 22000:
             os.system('killall roslaunch')
             sys.exit()
 
@@ -269,7 +269,7 @@ class nav_cloning_node:
                 writer.writerow(lines)
 
             self.vel.linear.x = 0.2
-            if angle_error < 0.02:
+            if angle_error < 0.05:
                 with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                     writer = csv.writer(f, lineterminator='\n')
                     writer.writerow(lines)
@@ -295,7 +295,7 @@ class nav_cloning_node:
             with open(self.path + self.start_time + '/' + 'training_all.csv', 'a') as f:
                 writer = csv.writer(f, lineterminator='\n')
                 writer.writerow(lines)
-            if angle_error < 0.02:
+            if angle_error < 0.05:
                 with open(self.path + self.start_time + '/' + 'training.csv', 'a') as f:
                     writer = csv.writer(f, lineterminator='\n')
                     writer.writerow(lines)
@@ -305,13 +305,13 @@ class nav_cloning_node:
             self.nav_pub.publish(self.vel)
 
        
-        temp = copy.deepcopy(img)
-        cv2.imshow("Resized Image", temp)
-        temp = copy.deepcopy(img_left)
-        cv2.imshow("Resized Left Image", temp)
-        temp = copy.deepcopy(img_right)
-        cv2.imshow("Resized Right Image", temp)
-        cv2.waitKey(1)
+        # temp = copy.deepcopy(img)
+        # cv2.imshow("Resized Image", temp)
+        # temp = copy.deepcopy(img_left)
+        # cv2.imshow("Resized Left Image", temp)
+        # temp = copy.deepcopy(img_right)
+        # cv2.imshow("Resized Right Image", temp)
+        # cv2.waitKey(1)
 
 if __name__ == '__main__':
     rg = nav_cloning_node()

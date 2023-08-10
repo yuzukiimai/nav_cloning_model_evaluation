@@ -8,11 +8,6 @@
   <arg name="waypoints_file" default="/home/masaya/maps/waypoints_willow.yaml"/>
   <arg name="dist_err" default="0.8"/>
 
-  <!-- willow_default -->
-  <!-- <arg name="initial_pose_x" default="-10.78" /> -->
-  <!-- <arg name="initial_pose_y" default="-16.78" /> -->
-  <!-- <arg name="initial_pose_a" default="0.0" /> -->
-
 
   <!-- willow_my_config -->
   <arg name="initial_pose_x" default="-8.1377" />

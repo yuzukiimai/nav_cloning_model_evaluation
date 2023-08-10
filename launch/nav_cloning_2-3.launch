@@ -1,20 +1,11 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_default.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_hsv.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_rand_gamma.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_edge.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_extreme.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_gamma_sharp.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_gray.py"/> -->
-  <arg name="script" default="nav_cloning_node_pytorch_movie.py"/>
+  <arg name="script" default="nav_cloning_node_pytorch_default.py"/>
 
 
   <arg name="mode" default="use_dl_output"/>
   <!-- <arg name="mode" default="change_dataset_balance"/> -->
   <!-- <arg name="mode" default="follow_line"/> -->
-
 
 
   <!-- 2-3 -->
@@ -31,7 +22,6 @@
 
 
   <rosparam param="/nav_cloning_node/mode" subst_value="True">$(arg mode)</rosparam>
-
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!-- <arg name="world_name" value="$(find real_tsudanuma2-3_sim)/world/tsudanuma_scan.world"/>  -->
     <arg name="world_name" value="$(find nav_cloning)/world/Tsudanuma_2-3.world"/> 

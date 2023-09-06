@@ -275,11 +275,11 @@ class nav_cloning_node:
 
         if self.kill_flg:
             self.kill_count += 1
-            if self.kill_count == 2400:
+            if self.kill_count == 2600:
                 os.system('killall roslaunch')
                 sys.exit()
 
-        if self.kill_flg == False and self.episode == 20000:
+        if self.kill_flg == False and self.episode == 30000:
             self.learning = False
             self.dl.save(self.save_path)
             # self.dl.load("/home/yuzuki//model_gpu.pt")
@@ -288,7 +288,7 @@ class nav_cloning_node:
         self.mode_pub.publish(mode)
 
 
-        if self.episode == 24000:
+        if self.kill_flg == False and self.episode == 32600:
             os.system('killall roslaunch')
             sys.exit()
 

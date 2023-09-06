@@ -153,12 +153,12 @@ class nav_cloning_node:
         #img_right = np.asanyarray([r,g,b])
         ros_time = str(rospy.Time.now())
 
-        if self.episode == 11280:
+        if self.episode == 6300:
             self.learning = False
             self.dl.save(self.save_path)
             #self.dl.load(self.load_path)
 
-        if self.episode == 13080:
+        if self.episode == 8100:
             os.system('killall roslaunch')
             sys.exit()
 

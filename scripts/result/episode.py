@@ -3,8 +3,8 @@ import glob
 import os
 
 lists = []
-# for filename in sorted(glob.glob('/home/yuzuki/result_cdb_10_success_800_point/*/learning_exit_episode.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
 for filename in sorted(glob.glob('/home/yuzuki/catkin_ws/src/nav_cloning/data/result_change_dataset_balance/*/learning_exit_episode.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
+# for filename in sorted(glob.glob('/home/yuzuki/result/result_SI/50%/*/learning_exit_episode.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
     lists.append(filename)
 
 # def draw_training_pos():

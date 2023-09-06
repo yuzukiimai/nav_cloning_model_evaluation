@@ -5,7 +5,7 @@ import os
 
 if __name__ == '__main__':
     lists = []
-    for filename in sorted(glob.glob('/home/yuzuki/willow100_success/*/learning_exit_episode.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
+    for filename in sorted(glob.glob('/home/yuzuki/40%/*/learning_exit_episode.csv'), key=lambda f: os.stat(f).st_mtime, reverse=True):
         lists.append(filename)
 
     combined_data = pd.DataFrame()
@@ -19,7 +19,7 @@ if __name__ == '__main__':
         df = pd.DataFrame({'Values': values})
         combined_data = pd.concat([combined_data, df])
 
-    excel_writer = pd.ExcelWriter('combined_data.xlsx', engine='xlsxwriter')
+    excel_writer = pd.ExcelWriter('40%.xlsx', engine='xlsxwriter')
 
     combined_data.to_excel(excel_writer, sheet_name='Combined Data', index=False)
 

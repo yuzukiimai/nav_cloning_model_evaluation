@@ -279,7 +279,7 @@ class nav_cloning_node:
                 os.system('killall roslaunch')
                 sys.exit()
 
-        if self.episode == 20000:
+        if self.kill_flg == False and self.episode == 25000:
             self.learning = False
             self.dl.save(self.save_path)
             # self.dl.load("/home/yuzuki//model_gpu.pt")
@@ -288,7 +288,7 @@ class nav_cloning_node:
         self.mode_pub.publish(mode)
 
 
-        if self.episode == 22000:
+        if self.kill_flg == False and self.episode == 27000:
             os.system('killall roslaunch')
             sys.exit()
 
@@ -429,59 +429,59 @@ class nav_cloning_node:
                 if self.waypoint_count == 10:
                     self.ok_count_10 += 1
 
-            if self.ok_count_0 * 2 > self.count_0:
+            if self.ok_count_0 *2.5 > self.count_0:
                 self.flg_0 = True
-            if self.ok_count_0 * 2 < self.count_0:
+            if self.ok_count_0 *2.5 < self.count_0:
                 self.flg_0 = False
             
-            if self.ok_count_1 * 2 > self.count_1:
+            if self.ok_count_1 *2.5 > self.count_1:
                 self.flg_1 = True
-            if self.ok_count_1 * 2 < self.count_1:
+            if self.ok_count_1 *2.5 < self.count_1:
                 self.flg_1 = False
 
-            if self.ok_count_2 * 2 > self.count_2:
+            if self.ok_count_2 *2.5 > self.count_2:
                 self.flg_2 = True
-            if self.ok_count_2 * 2 < self.count_2:
+            if self.ok_count_2 *2.5 < self.count_2:
                 self.flg_2 = False
 
-            if self.ok_count_3 * 2 > self.count_3:
+            if self.ok_count_3 *2.5 > self.count_3:
                 self.flg_3 = True
-            if self.ok_count_3 * 2 < self.count_3:
+            if self.ok_count_3 *2.5 < self.count_3:
                 self.flg_3 = False
 
-            if self.ok_count_4 * 2 > self.count_4:
+            if self.ok_count_4 *2.5 > self.count_4:
                 self.flg_4 = True
-            if self.ok_count_4 * 2 < self.count_4:
+            if self.ok_count_4 *2.5 < self.count_4:
                 self.flg_4 = False
 
-            if self.ok_count_5 * 2 > self.count_5:
+            if self.ok_count_5 *2.5 > self.count_5:
                 self.flg_5 = True
-            if self.ok_count_5 * 2 < self.count_5:
+            if self.ok_count_5 *2.5 < self.count_5:
                 self.flg_5 = False
 
-            if self.ok_count_6 * 2 > self.count_6:
+            if self.ok_count_6 *2.5 > self.count_6:
                 self.flg_6 = True
-            if self.ok_count_6 * 2 < self.count_6:
+            if self.ok_count_6 *2.5 < self.count_6:
                 self.flg_6 = False
 
-            if self.ok_count_7 * 2 > self.count_7:
+            if self.ok_count_7 *2.5 > self.count_7:
                 self.flg_7 = True
-            if self.ok_count_7 * 2 < self.count_7:
+            if self.ok_count_7 *2.5 < self.count_7:
                 self.flg_7 = False
 
-            if self.ok_count_8 * 2 > self.count_8:
+            if self.ok_count_8 *2.5 > self.count_8:
                 self.flg_8 = True
-            if self.ok_count_8 * 2 < self.count_8:
+            if self.ok_count_8 *2.5 < self.count_8:
                 self.flg_8 = False
 
-            if self.ok_count_9 * 2 > self.count_9:
+            if self.ok_count_9 *2.5 > self.count_9:
                 self.flg_9 = True
-            if self.ok_count_9 * 2 < self.count_9:
+            if self.ok_count_9 *2.5 < self.count_9:
                 self.flg_9 = False
 
-            if self.ok_count_10 * 2 > self.count_10:
+            if self.ok_count_10 *2.5 > self.count_10:
                 self.flg_10 = True
-            if self.ok_count_10 * 2 < self.count_10:
+            if self.ok_count_10 *2.5 < self.count_10:
                 self.flg_10 = False
 
             if self.flg_0 and self.flg_1 and self.flg_2 and self.flg_3 and self.flg_4 and self.flg_5 and \

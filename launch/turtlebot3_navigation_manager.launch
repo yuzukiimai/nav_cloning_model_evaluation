@@ -8,14 +8,14 @@
 
 
   <!-- willow_my_config -->
-  <!-- <arg name="initial_pose_x" default="-8.1377" /> -->
-  <!-- <arg name="initial_pose_y" default="-16.01" /> -->
-  <!-- <arg name="initial_pose_a" default="0.01" /> -->
+  <arg name="initial_pose_x" default="-8.1377" />
+  <arg name="initial_pose_y" default="-16.01" />
+  <arg name="initial_pose_a" default="0.01" />
 
   <!-- 2-3 -->
-  <arg name="initial_pose_x" default="-9.6309" />
-  <arg name="initial_pose_y" default="28.441895426996574" />
-  <arg name="initial_pose_a" default="-1.57" />
+  <!-- <arg name="initial_pose_x" default="-9.6309" /> -->
+  <!-- <arg name="initial_pose_y" default="28.441895426996574" /> -->
+  <!-- <arg name="initial_pose_a" default="-1.57" /> -->
   
 
 

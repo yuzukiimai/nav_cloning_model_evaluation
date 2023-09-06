@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
   <!-- <arg name="script" default="nav_cloning_node_pytorch_default.py"/> -->
-  <!-- <arg name="script" default="nav_cloning_node_pytorch_plot1_willow_50_corner.py"/> -->
-  <arg name="script" default="nav_cloning_node_pytorch_plot1_2-3_corner.py"/>
-  <!-- <arg name="script2" default="nav_cloning_node_pytorch_plot2_willow_50_corner.py"/> -->
-  <arg name="script2" default="nav_cloning_node_pytorch_plot2_2-3_corner.py"/>
+  <arg name="script" default="nav_cloning_node_pytorch_plot1_willow_50_corner.py"/>
+  <!-- <arg name="script" default="nav_cloning_node_pytorch_plot1_2-3_corner.py"/> -->
+  <arg name="script2" default="nav_cloning_node_pytorch_plot2_willow_50_corner.py"/>
+  <!-- <arg name="script2" default="nav_cloning_node_pytorch_plot2_2-3_corner.py"/> -->
 
 
   <!-- <arg name="mode" default="use_dl_output"/> -->
@@ -14,14 +14,14 @@
 
 
   <!-- <willow_my_config> -->
-  <!-- <arg name="robot_x" default="2.915899" /> -->
-  <!-- <arg name="robot_y" default="0.717698" /> -->
-  <!-- <arg name="robot_Y" default="0.024363" /> -->
+  <arg name="robot_x" default="2.915899" />
+  <arg name="robot_y" default="0.717698" />
+  <arg name="robot_Y" default="0.024363" />
 
   <!-- 2-3 -->
-  <arg name="robot_x" default="-10.1856145815951" />
-  <arg name="robot_y" default="28.441895426996574" />
-  <arg name="robot_Y" default="-1.57" />
+  <!-- <arg name="robot_x" default="-10.1856145815951" /> -->
+  <!-- <arg name="robot_y" default="28.441895426996574" /> -->
+  <!-- <arg name="robot_Y" default="-1.57" /> -->
 
 
 
@@ -38,9 +38,9 @@
   <rosparam param="/nav_cloning_node/mode" subst_value="True">$(arg mode)</rosparam>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <!-- <arg name="world_name" value="$(find nav_cloning)/world/willow_garage.world"/>  -->
+    <arg name="world_name" value="$(find nav_cloning)/world/willow_garage.world"/> 
     <!-- <arg name="world_name" value="$(find real_tsudanuma2-3_sim)/world/tsudanuma2-3_v2.3.3.world"/>  -->
-    <arg name="world_name" value="$(find nav_cloning)/world/Tsudanuma_2-3.world"/> 
+    <!-- <arg name="world_name" value="$(find nav_cloning)/world/Tsudanuma_2-3.world"/>  -->
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="false"/>
@@ -61,15 +61,15 @@
         args="60 nav_cloning nav_cloning2.launch script2:=$(arg script2)"
         name="timed_roslaunch2" output="screen" />
 
-  <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
+  <!-- <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
         args="10 nav_cloning turtlebot3_navigation_manager.launch model:=waffle map_file:=$(find nav_cloning)/maps/cit_3f_map.yaml"
         name="timed_roslaunch3" >
-  </node>
+  </node> -->
 
-  <!-- <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
+  <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
         args="10 nav_cloning turtlebot3_navigation_manager.launch model:=waffle map_file:=$(find nav_cloning)/maps/willowgarage.yaml"
         name="timed_roslaunch3" >
-  </node> -->
+  </node>
   
   <node pkg="timed_roslaunch" type="timed_roslaunch.sh"
         args="30 nav_cloning start_manager_nav.launch"
